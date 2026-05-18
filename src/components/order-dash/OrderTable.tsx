@@ -131,8 +131,7 @@ const OrdersTable: React.FC<OrderTableProps> = ({
   return (
     <div
       ref={tableRef}
-      className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-visible min-h-125"
-    >
+      className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-visible min-h-125">
       <div className="w-full overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -204,8 +203,7 @@ const OrdersTable: React.FC<OrderTableProps> = ({
                       isChecked
                         ? "bg-orange-50/50"
                         : "bg-white hover:bg-slate-50/60"
-                    }`}
-                  >
+                    }`}>
                     {isChecked && (
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#F5891E]"></div>
                     )}
@@ -221,157 +219,161 @@ const OrdersTable: React.FC<OrderTableProps> = ({
                     </td>
 
                     {/* 2. Order Info */}
-   <td className="p-4 align-top">
-  <div className="flex flex-col gap-1.5">
-    <span className="font-bold text-slate-900 text-sm tracking-tight">
-      #{order.order_id || order.channel_order_id}
-    </span>
-    <span className="text-slate-500 text-[12px] font-medium">
-      {new Date(order.order_date || order.createdAt).toLocaleString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        hour: "2-digit",
-        minute: "2-digit",
-      })}
-    </span>
+                    <td className="p-4 align-top">
+                      <div className="flex flex-col gap-1.5">
+                        <span className="font-bold text-slate-900 text-sm tracking-tight">
+                          #{order.order_id || order.channel_order_id}
+                        </span>
+                        <span className="text-slate-500 text-[12px] font-medium">
+                          {new Date(
+                            order.order_date || order.createdAt,
+                          ).toLocaleString("en-IN", {
+                            day: "2-digit",
+                            month: "short",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
 
-    <div className="flex items-center gap-2 mt-1.5 px-2.5 py-2 rounded-lg w-max border border-slate-200 bg-slate-50">
-      <Store size={13} className="text-[#F5891E] flex-shrink-0" />
-      <div className="flex flex-col leading-snug">
-        <span className="text-[12px] font-semibold text-slate-800">
-          {order.channel_account?.channel_account_name || "Manual Store"}
-        </span>
-        <div className="flex items-center gap-1">
-          <span className="text-[10px] text-slate-400">Pool:</span>
-          <span className="text-[10px] font-semibold text-[#F5891E]">
-            {order.channel_account?.pool_id || "N/A"}
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-</td>
+                        <div className="flex items-center gap-2 mt-1.5 px-2.5 py-2 rounded-lg w-max border border-slate-200 bg-slate-50">
+                          <Store
+                            size={13}
+                            className="text-[#F5891E] flex-shrink-0"
+                          />
+                          <div className="flex flex-col leading-snug">
+                            <span className="text-[12px] font-semibold text-slate-800">
+                              {order.channel_account?.channel_account_name ||
+                                "Manual Store"}
+                            </span>
+                            <div className="flex items-center gap-1">
+                              <span className="text-[10px] text-slate-400">
+                                Pool:
+                              </span>
+                              <span className="text-[10px] font-semibold text-[#F5891E]">
+                                {order.channel_account?.pool_id || "N/A"}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
 
                     {/* 3. Items & Value (Nested Card Design) */}
-                  <td className="p-4 align-top">
-  <div className="flex flex-col bg-slate-50 rounded-xl p-3.5 border border-slate-200 shadow-sm inner-glow">
+                    <td className="p-4 align-top">
+                      <div className="flex flex-col bg-slate-50 rounded-xl p-3.5 border border-slate-200 shadow-sm inner-glow">
+                        {/* Single Item View */}
+                        {!hasMultipleItems && itemsList.length > 0 && (
+                          <div className="flex flex-col gap-1.5 mb-3 pb-3 border-b border-slate-200/80">
+                            <span
+                              className="font-semibold text-slate-800 text-xs truncate"
+                              title={itemsList[0].product?.product_sku_name}>
+                              {itemsList[0].product?.product_sku_name ||
+                                "Unknown Product"}
+                            </span>
 
-    {/* Single Item View */}
-    {!hasMultipleItems && itemsList.length > 0 && (
-      <div className="flex flex-col gap-1.5 mb-3 pb-3 border-b border-slate-200/80">
-        <span
-          className="font-semibold text-slate-800 text-xs truncate"
-          title={itemsList[0].product?.product_sku_name}
-        >
-          {itemsList[0].product?.product_sku_name || "Unknown Product"}
-        </span>
+                            <div className="flex justify-between items-center text-slate-500 text-[11px]">
+                              <span className="italic text-slate-500">
+                                {itemsList[0].product?.product_sku_id || "N/A"}
+                              </span>
 
-        <div className="flex justify-between items-center text-slate-500 text-[11px]">
-          <span className="italic text-slate-500">
-            {itemsList[0].product?.product_sku_id || "N/A"}
-          </span>
+                              <span className="font-bold bg-white border border-slate-200 px-2 py-0.5 rounded shadow-sm text-slate-700">
+                                Qty: {itemsList[0].quantity}
+                              </span>
+                            </div>
+                          </div>
+                        )}
 
-          <span className="font-bold bg-white border border-slate-200 px-2 py-0.5 rounded shadow-sm text-slate-700">
-            Qty: {itemsList[0].quantity}
-          </span>
-        </div>
-      </div>
-    )}
+                        {/* Multiple Items Accordion View */}
+                        {hasMultipleItems && (
+                          <div className="flex flex-col mb-3 pb-3 border-b border-slate-200/80">
+                            <div
+                              className="flex justify-between items-center cursor-pointer p-2 -mx-2 rounded-lg hover:bg-slate-200/50 transition-colors"
+                              onClick={() => toggleItems(order._id)}>
+                              <div className="flex items-center gap-2">
+                                <Package size={14} className="text-[#F5891E]" />
 
-    {/* Multiple Items Accordion View */}
-    {hasMultipleItems && (
-      <div className="flex flex-col mb-3 pb-3 border-b border-slate-200/80">
-        <div
-          className="flex justify-between items-center cursor-pointer p-2 -mx-2 rounded-lg hover:bg-slate-200/50 transition-colors"
-          onClick={() => toggleItems(order._id)}
-        >
-          <div className="flex items-center gap-2">
-            <Package size={14} className="text-[#F5891E]" />
+                                <span className="font-bold text-[#F5891E] text-xs">
+                                  {itemsList.length} Items in Order
+                                </span>
+                              </div>
 
-            <span className="font-bold text-[#F5891E] text-xs">
-              {itemsList.length} Items in Order
-            </span>
-          </div>
+                              <motion.div
+                                animate={{ rotate: isItemsExpanded ? 180 : 0 }}
+                                transition={{
+                                  type: "spring",
+                                  bounce: 0.3,
+                                  duration: 0.4,
+                                }}
+                                className="text-slate-500 bg-white shadow-sm border border-slate-200 rounded-full p-0.5">
+                                <ChevronDown size={14} />
+                              </motion.div>
+                            </div>
 
-          <motion.div
-            animate={{ rotate: isItemsExpanded ? 180 : 0 }}
-            transition={{
-              type: "spring",
-              bounce: 0.3,
-              duration: 0.4,
-            }}
-            className="text-slate-500 bg-white shadow-sm border border-slate-200 rounded-full p-0.5"
-          >
-            <ChevronDown size={14} />
-          </motion.div>
-        </div>
+                            <AnimatePresence initial={false}>
+                              {isItemsExpanded && (
+                                <motion.div
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: "auto", opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{
+                                    type: "spring",
+                                    bounce: 0,
+                                    duration: 0.3,
+                                  }}
+                                  className="overflow-hidden">
+                                  <div className="mt-2.5 pt-2.5 border-t border-slate-200/80 flex flex-col gap-2 max-h-50 overflow-y-auto custom-scrollbar">
+                                    {itemsList.map((item: any, idx: number) => (
+                                      <div
+                                        key={idx}
+                                        className="flex flex-col p-2.5 bg-white rounded-lg border border-slate-200 shadow-sm">
+                                        <span className="font-semibold text-slate-800 text-[11px] leading-snug mb-1.5">
+                                          {item.product?.product_sku_name ||
+                                            "Unknown Product"}
+                                        </span>
 
-        <AnimatePresence initial={false}>
-          {isItemsExpanded && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{
-                type: "spring",
-                bounce: 0,
-                duration: 0.3,
-              }}
-              className="overflow-hidden"
-            >
-              <div className="mt-2.5 pt-2.5 border-t border-slate-200/80 flex flex-col gap-2 max-h-50 overflow-y-auto custom-scrollbar">
-                {itemsList.map((item: any, idx: number) => (
-                  <div
-                    key={idx}
-                    className="flex flex-col p-2.5 bg-white rounded-lg border border-slate-200 shadow-sm"
-                  >
-                    <span className="font-semibold text-slate-800 text-[11px] leading-snug mb-1.5">
-                      {item.product?.product_sku_name ||
-                        "Unknown Product"}
-                    </span>
+                                        <div className="flex justify-between items-center text-slate-500 text-[10px]">
+                                          <span className="font-medium">
+                                            {item.product?.product_sku_id ||
+                                              "No SKU"}
+                                          </span>
 
-                    <div className="flex justify-between items-center text-slate-500 text-[10px]">
-                      <span className="font-medium">
-                        {item.product?.product_sku_id || "No SKU"}
-                      </span>
+                                          <span className="font-bold text-slate-900 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded">
+                                            x{item.quantity}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        )}
 
-                      <span className="font-bold text-slate-900 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded">
-                        x{item.quantity}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    )}
+                        {/* Empty State */}
+                        {itemsList.length === 0 && (
+                          <span className="text-slate-400 italic text-xs font-medium mb-3">
+                            No items found
+                          </span>
+                        )}
 
-    {/* Empty State */}
-    {itemsList.length === 0 && (
-      <span className="text-slate-400 italic text-xs font-medium mb-3">
-        No items found
-      </span>
-    )}
+                        {/* Amount & Payment Section */}
+                        <div className="flex justify-between items-center pt-2.5 border-t border-slate-200/80">
+                          <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-600">
+                            Amount:
+                            <span className="font-bold text-[15px] text-slate-900">
+                              ₹{order.total_amount}
+                            </span>
+                          </span>
 
-    {/* Amount & Payment Section */}
-    <div className="flex justify-between items-center pt-2.5 border-t border-slate-200/80">
-      <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-600">
-        Amount:
-        <span className="font-bold text-[15px] text-slate-900">
-          ₹{order.total_amount}
-        </span>
-      </span>
-
-     <span className="px-2 py-0.5 bg-white border border-slate-300 rounded text-[10px] uppercase font-bold text-slate-600 tracking-wider shadow-sm">
-  {order.payment_method?.length > 15
-    ? `${order.payment_method.slice(0, 15)}...`
-    : order.payment_method}
-</span>
-    </div>
-  </div>
-</td>
+                          <span className="px-2 py-0.5 bg-white border border-slate-300 rounded text-[10px] uppercase font-bold text-slate-600 tracking-wider shadow-sm">
+                            {order.payment_method?.length > 15
+                              ? `${order.payment_method.slice(0, 15)}...`
+                              : order.payment_method}
+                          </span>
+                        </div>
+                      </div>
+                    </td>
                     {/* 4. Customer Info */}
                     <td className="p-4 align-top">
                       <div className="flex items-center gap-2 mb-2">
@@ -381,8 +383,7 @@ const OrdersTable: React.FC<OrderTableProps> = ({
                         <button
                           onClick={() => onEditOrder(order)}
                           className="p-1 rounded-full text-slate-400 hover:text-[#F5891E] hover:bg-orange-50 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
-                          title="Edit Customer"
-                        >
+                          title="Edit Customer">
                           <Pencil size={13} />
                         </button>
                       </div>
@@ -412,9 +413,8 @@ const OrdersTable: React.FC<OrderTableProps> = ({
                         <button
                           onClick={() => onViewStatus(order.status)}
                           className={`px-3 py-1.5 rounded-full text-[11px] font-bold tracking-wide border shadow-sm ${getStatusStyle(
-                            statusName
-                          )} hover:opacity-80 transition-opacity`}
-                        >
+                            statusName,
+                          )} hover:opacity-80 transition-opacity`}>
                           {statusName}
                         </button>
 
@@ -424,9 +424,8 @@ const OrdersTable: React.FC<OrderTableProps> = ({
                               AWB:{" "}
                             </span>
                             <Link
-                              to={`/track/${order.awb_number}`}
-                              className="font-bold text-[#F5891E] hover:underline"
-                            >
+                              to={`/customer/track/${order._id}`}
+                              className="font-bold text-[#F5891E] hover:underline">
                               {order.awb_number}
                             </Link>
                           </div>
@@ -451,8 +450,7 @@ const OrdersTable: React.FC<OrderTableProps> = ({
                             {issues.map((issue: any, idx: number) => (
                               <span
                                 key={idx}
-                                className="flex items-center gap-1 bg-red-100/80 text-red-700 border border-red-200 px-2 py-1 rounded-md text-[10px] font-bold tracking-wide shadow-sm"
-                              >
+                                className="flex items-center gap-1 bg-red-100/80 text-red-700 border border-red-200 px-2 py-1 rounded-md text-[10px] font-bold tracking-wide shadow-sm">
                                 <Flag size={10} />{" "}
                                 {issue.message || "Action Required"}
                               </span>
@@ -482,15 +480,13 @@ const OrdersTable: React.FC<OrderTableProps> = ({
                         {order.awb_number ? (
                           <button
                             onClick={() => onPickup(order)}
-                            className="px-4 py-1.5 rounded-full text-xs font-bold text-slate-700 bg-white border border-slate-300 shadow-sm hover:bg-slate-50 hover:border-slate-400 transition-all"
-                          >
+                            className="px-4 py-1.5 rounded-full text-xs font-bold text-slate-700 bg-white border border-slate-300 shadow-sm hover:bg-slate-50 hover:border-slate-400 transition-all">
                             Pickup
                           </button>
                         ) : (
                           <button
                             onClick={() => handleShipNow(order)}
-                            className="w-24 h-8 flex items-center justify-center rounded-full text-xs font-bold text-white bg-linear-to-r from-[#F5891E] to-[#FF6B35] shadow-[0_2px_10px_rgba(245,137,30,0.3)] hover:shadow-[0_4px_14px_rgba(245,137,30,0.4)] transition-all hover:-translate-y-0.5 active:translate-y-0"
-                          >
+                            className="w-24 h-8 flex items-center justify-center rounded-full text-xs font-bold text-white bg-linear-to-r from-[#F5891E] to-[#FF6B35] shadow-[0_2px_10px_rgba(245,137,30,0.3)] hover:shadow-[0_4px_14px_rgba(245,137,30,0.4)] transition-all hover:-translate-y-0.5 active:translate-y-0">
                             {shipLoading === order._id ? (
                               <Loader2 size={14} className="animate-spin" />
                             ) : (
@@ -504,11 +500,10 @@ const OrdersTable: React.FC<OrderTableProps> = ({
                           <button
                             onClick={() =>
                               setActiveDropdown(
-                                activeDropdown === order._id ? null : order._id
+                                activeDropdown === order._id ? null : order._id,
                               )
                             }
-                            className="p-1.5 rounded-md text-slate-400 border border-transparent hover:border-slate-200 hover:text-slate-700 hover:bg-slate-50 transition-all shadow-sm hover:shadow"
-                          >
+                            className="p-1.5 rounded-md text-slate-400 border border-transparent hover:border-slate-200 hover:text-slate-700 hover:bg-slate-50 transition-all shadow-sm hover:shadow">
                             <MoreVertical size={18} />
                           </button>
 
@@ -519,8 +514,7 @@ const OrdersTable: React.FC<OrderTableProps> = ({
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: -5, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="absolute right-0 top-full mt-1.5 w-48 bg-white rounded-xl shadow-lg border border-slate-200 z-50 overflow-hidden"
-                              >
+                                className="absolute right-0 top-full mt-1.5 w-48 bg-white rounded-xl shadow-lg border border-slate-200 z-50 overflow-hidden">
                                 <div className="py-1">
                                   {order.awb_number ? (
                                     <button
@@ -528,8 +522,7 @@ const OrdersTable: React.FC<OrderTableProps> = ({
                                         onPrintLabel(order.label);
                                         setActiveDropdown(null);
                                       }}
-                                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-semibold transition-colors"
-                                    >
+                                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-semibold transition-colors">
                                       <Printer
                                         size={16}
                                         className="text-slate-400"
@@ -542,8 +535,7 @@ const OrdersTable: React.FC<OrderTableProps> = ({
                                         onAutoBook([order]);
                                         setActiveDropdown(null);
                                       }}
-                                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-semibold transition-colors"
-                                    >
+                                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-semibold transition-colors">
                                       <Box
                                         size={16}
                                         className="text-slate-400"
@@ -557,8 +549,7 @@ const OrdersTable: React.FC<OrderTableProps> = ({
                                       onCancelOrder(order._id);
                                       setActiveDropdown(null);
                                     }}
-                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 font-semibold transition-colors"
-                                  >
+                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 font-semibold transition-colors">
                                     <XCircle
                                       size={16}
                                       className="text-red-500"

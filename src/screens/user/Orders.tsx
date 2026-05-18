@@ -135,6 +135,8 @@ interface PaymentMethod {
 const ShippingLabel = ({ labelData }: any) => {
   const data = labelData;
   return (
+
+    
     <div
       style={{
         width: "100mm",
@@ -149,6 +151,14 @@ const ShippingLabel = ({ labelData }: any) => {
         boxSizing: "border-box",
         backgroundColor: "white",
       }}
+
+
+
+
+
+
+
+      
     >
       <div className="header" style={{ textAlign: "center" }}>
         <h2 style={{ margin: "0 0 6px 0", fontWeight: "bold" }}>
@@ -1754,8 +1764,24 @@ const Orders: React.FC = () => {
     },
   ];
 
-  return (
-    <div className="container">
+ 
+return (
+  <div className="container">
+
+    {/* Important Notice */}
+    <div className="w-full mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-900 shadow-sm">
+      <span className="font-bold text-amber-950">
+        Important Notice:
+      </span>{" "}
+      In order to provide better service to your brand, we have launched our
+      new Orders Panel — faster, more efficient, reliable, and secure. We
+      encourage all users to start using the new panel. The Old Orders page
+      will be deprecated from{" "}
+      <span className="font-bold">1st July 2026</span>. However, your
+      historical orders will still be accessible through our support team
+      whenever required.
+    </div>
+
       <style>{`
         /* Orders screen responsive styles */
         .orders-header { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }

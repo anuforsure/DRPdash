@@ -411,18 +411,7 @@ const OrderDash = () => {
    <>
   <div className="w-full">
     {/* Top Notice Banner */}
-    <div className="w-full mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-900 shadow-sm">
-      <span className="font-bold text-amber-950">
-        Important Notice:
-      </span>{" "}
-      In order to provide better service to your brand, we have launched our
-      new Orders Panel — faster, more efficient, reliable, and secure. We
-      encourage all users to start using the new panel. The Old Orders page
-      will be deprecated from{" "}
-      <span className="font-bold">1st July 2026</span>. However, your
-      historical orders will still be accessible through our support team
-      whenever required.
-    </div>
+   
 
     {/* Header Section */}
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">

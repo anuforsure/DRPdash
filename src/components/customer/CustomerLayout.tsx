@@ -1,5 +1,4 @@
 import React from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { ShoppingBag, LogOut } from "lucide-react";
 import "./customer.css";
@@ -17,6 +16,7 @@ const Layout: React.FC<LayoutProps> = ({ children, title = "Dashboard" }) => {
   const location = useLocation();
 
   const isActive = (path: string) => location.pathname === path;
+
   const handleLogout = async () => {
     try {
       await customerAxios.post(`${drpCrmBaseUrl}/customer/auth/logout`);
@@ -25,35 +25,44 @@ const Layout: React.FC<LayoutProps> = ({ children, title = "Dashboard" }) => {
       toast.error(err.message);
     }
   };
+
   return (
-    <div className="d-flex min-vh-100 bg-light">
-      <aside className="sidebar1 bg-white border-end d-none d-md-flex flex-column">
-        <div className="p-4 border-bottom d-flex align-items-center">
-          <span
-            className="mb-0 text-amber"
-            style={{ fontSize: "30px", fontWeight: "800" }}
-          >
-            OrderzUp
-          </span>
+    <div className="flex min-h-screen bg-gray-50">
+
+      {/* ── Sidebar ── */}
+      <aside className="hidden md:flex flex-col w-90 bg-white border-r border-gray-100 flex-shrink-0">
+
+        {/* Logo */}
+         <div className="flex items-center justify-between px-8 pt-6 pb-4">
+          <div className="flex items-center justify-center gap-3">
+            <img src="/Orderzup.png" alt="Logo Icon" className="w-15" />
+            <span className="font-bold text-[#000967] text-5xl">
+              Orderz<span className="text-[#F5891E]">Up</span>
+            </span>
+          </div>
+         
         </div>
 
-        <Nav className="flex-column p-3 flex-grow-1">
-          <Nav.Link
-            as={Link}
+        {/* Nav links */}
+        <nav className="flex-1 p-3 flex flex-col gap-1">
+          <Link
             to="/customer/order"
-            className={`sidebar-link d-flex align-items-center rounded-3 mb-2 ${
-              isActive("/customer/order") ? "active" : ""
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors duration-150 ${
+              isActive("/customer/order")
+                ? "bg-amber-50 text-amber-600"
+                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
             }`}
           >
-            <ShoppingBag size={20} className="me-3" />
-            <span>All Orders</span>
-          </Nav.Link>
-        </Nav>
+            <ShoppingBag size={20} />
+            All Orders
+          </Link>
+        </nav>
 
-        <div className="p-3 border-top mt-auto">
+        {/* Logout */}
+        <div className="p-3 border-t border-gray-100">
           <button
             onClick={handleLogout}
-            className="btn btn-logout w-100 d-flex align-items-center justify-content-center gap-2"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors duration-150"
           >
             <LogOut size={18} />
             Logout
@@ -61,26 +70,29 @@ const Layout: React.FC<LayoutProps> = ({ children, title = "Dashboard" }) => {
         </div>
       </aside>
 
-      <div className="flex-grow-1 d-flex flex-column overflow-hidden">
-        <Navbar bg="white" className="header border-bottom px-4">
-          <div className="d-flex align-items-center justify-content-between w-100">
-            <h1 className="h4 fw-bold mb-0 text-dark">{title}</h1>
+      {/* ── Main area ── */}
+      <div className="flex-1 flex flex-col overflow-hidden">
 
-            <div className="d-flex align-items-center">
-              <div className="user-avatar ms-3">AB</div>
-            </div>
+        {/* Header */}
+        <header className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between flex-shrink-0">
+          <h1 className="text-lg font-bold text-gray-900">{title}</h1>
+          <div className="w-9 h-9 rounded-full bg-amber-100 text-amber-700 text-sm font-bold flex items-center justify-center">
+            AB
           </div>
-        </Navbar>
+        </header>
 
-        <main className="content-scroll flex-grow-1 p-4 overflow-auto">
-          <Container fluid className="p-0">
+        {/* Page content */}
+        <main className="flex-1 overflow-auto p-6">
+          <div className="w-full">
             {children}
-          </Container>
+          </div>
         </main>
 
-        <footer className="bg-white text-center py-3 text-muted small border-top">
+        {/* Footer */}
+        <footer className="bg-white border-t border-gray-100 py-3 text-center text-xs text-gray-400">
           © 2026 OrderzUp Customer Portal
         </footer>
+
       </div>
     </div>
   );

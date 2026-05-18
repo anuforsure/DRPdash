@@ -1,14 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-  ProgressBar,
-} from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../../components/customer/CustomerLayout";
 import {
@@ -46,33 +38,30 @@ const TrackingPage: React.FC = () => {
     fetchStatus();
   }, [orderId]);
 
-  // --- DATA MAPPING LOGIC ---
   const trackingData = useMemo(() => {
     if (!order || !order.status)
       return { steps: [], edd: "TBA", currentStatus: "" };
 
-    // 1. Sort status by date (Latest first for UI, or reverse if you want chronological)
     const sortedStatuses = [...order.status].sort(
       (a, b) =>
         new Date(b.status_date).getTime() - new Date(a.status_date).getTime()
     );
 
-    // 2. Map to UI Steps
     const steps = sortedStatuses.map((s, index) => ({
-      status: s.status.replace(/_/g, " "), // e.g. re_activate -> re activate
+      status: s.status.replace(/_/g, " "),
       date: new Date(s.status_date).toLocaleString("en-IN", {
         day: "numeric",
         month: "short",
         hour: "2-digit",
         minute: "2-digit",
       }),
-      location: s.status_details?.origin || s.status_details?.destination || "",
+      location:
+        s.status_details?.origin || s.status_details?.destination || "",
       desc: s.status_details?.courier_name || "Status updated in system",
-      completed: true, // If it's in the status array, it's a past event
-      current: index === 0, // Most recent is the current state
+      completed: true,
+      current: index === 0,
     }));
 
-    // 3. Extract EDD (Estimated Delivery Date) from the latest status with details
     const eddStatus = order.status.find((s: any) => s.status_details?.edd);
     const edd = eddStatus?.status_details?.edd || "Standard Delivery";
 
@@ -82,156 +71,184 @@ const TrackingPage: React.FC = () => {
   if (loading)
     return (
       <Layout title="Loading...">
-        <div className="p-5 text-center">Loading Tracking Info...</div>
+        <div className="p-10 text-center">Loading Tracking Info...</div>
       </Layout>
     );
+
   if (!order)
     return (
       <Layout title="Error">
-        <div className="p-5 text-center text-danger">
+        <div className="p-10 text-center text-red-500">
           Failed to retrieve data
         </div>
       </Layout>
     );
 
+  const progressPercent = Math.min(
+    (trackingData.steps.length / 6) * 100,
+    100
+  );
+
+  const courierName =
+    order.status.find((s: any) => s.status_details?.courier_name)
+      ?.status_details.courier_name || "Shipping Partner";
+
+  const awbCode =
+    order.status.find((s: any) => s.status_details?.awb_code)?.status_details
+      .awb_code || "N/A";
+
   return (
     <Layout title="Track Package">
-      <Container className="p-0">
-        <Button
-          variant="link"
+      <div className="px-0">
+        {/* Back Button */}
+        <button
           onClick={() => navigate(-1)}
-          className="text-decoration-none ps-0 mb-4 text-secondary d-flex align-items-center"
+          className="flex items-center gap-2 text-gray-500 hover:text-gray-700 mb-6 text-sm font-medium transition-colors"
         >
-          <ArrowLeft size={18} className="me-2" /> Back to Order Details
-        </Button>
+          <ArrowLeft size={18} />
+          Back to Order Details
+        </button>
 
-        <Row className="g-4">
-          <Col lg={8}>
-            <Card className="border-0 shadow-sm mb-4 overflow-hidden">
-              <div className="bg-amber-light p-4 d-flex align-items-center justify-content-between">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Left Column */}
+          <div className="flex-1 lg:w-2/3">
+            <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6 border border-gray-100">
+              {/* Header Banner */}
+              <div className="bg-amber-50 p-6 flex items-center justify-between">
                 <div>
-                  <p className="text-amber fw-bold mb-1 small text-uppercase tracking-wider">
+                  <p className="text-amber-600 font-bold text-xs uppercase tracking-widest mb-1">
                     Estimated Delivery
                   </p>
-                  <h2 className="fw-bold mb-0 text-dark">{trackingData.edd}</h2>
-                  <p className="text-muted small mb-0 mt-1">
-                    Current Status: {trackingData.currentStatus}
+                  <h2 className="text-2xl font-bold text-gray-900 mb-0">
+                    {trackingData.edd}
+                  </h2>
+                  <p className="text-gray-500 text-sm mt-1">
+                    Current Status:{" "}
+                    <span className="capitalize">
+                      {trackingData.currentStatus}
+                    </span>
                   </p>
                 </div>
-                <div className="bg-white p-3 rounded-circle shadow-sm text-amber">
+                <div className="bg-white p-3 rounded-full shadow-sm text-amber-500">
                   <Truck size={32} />
                 </div>
               </div>
 
-              <Card.Body className="p-4">
-                <p className="fw-bold mb-2 small text-muted">
+              {/* Progress + Timeline */}
+              <div className="p-6">
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
                   Shipment Progress
                 </p>
-                {/* Visual Progress: based on number of steps / 6 (assuming 6 steps total for 100%) */}
-                <ProgressBar
-                  now={Math.min((trackingData.steps.length / 6) * 100, 100)}
-                  className="custom-progress mb-4"
-                />
 
-                <div className="timeline-container ps-2">
+                {/* Progress Bar */}
+                <div className="w-full bg-gray-100 rounded-full h-2 mb-6 overflow-hidden">
+                  <div
+                    className="bg-amber-500 h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                </div>
+
+                {/* Timeline */}
+                <div className="pl-2">
                   {trackingData.steps.map((step, index) => (
                     <div
                       key={index}
-                      className="d-flex position-relative pb-5 timeline-item"
+                      className="flex relative pb-10 last:pb-0"
                     >
+                      {/* Vertical Line */}
                       {index !== trackingData.steps.length - 1 && (
-                        <div className="timeline-line bg-dark"></div>
+                        <div className="absolute left-4 top-8 bottom-0 w-0.5 bg-gray-800 z-0" />
                       )}
 
-                      <div className="me-4 position-relative z-1">
+                      {/* Icon */}
+                      <div className="mr-5 relative z-10 flex-shrink-0">
                         {step.current ? (
-                          <div className="pulse-container">
-                            <div
-                              className="bg-amber rounded-circle d-flex align-items-center justify-content-center text-white"
-                              style={{ width: 32, height: 32 }}
-                            >
+                          <div className="relative">
+                            <div className="absolute inset-0 rounded-full bg-amber-400 opacity-30 animate-ping" />
+                            <div className="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center text-white relative">
                               <Truck size={16} />
                             </div>
                           </div>
                         ) : (
-                          <div
-                            className="bg-black rounded-circle d-flex align-items-center justify-content-center text-white"
-                            style={{ width: 32, height: 32 }}
-                          >
+                          <div className="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center text-white">
                             <CheckCircle2 size={18} />
                           </div>
                         )}
                       </div>
 
-                      <div className={step.current ? "" : "opacity-75"}>
+                      {/* Content */}
+                      <div className={step.current ? "" : "opacity-70"}>
                         <h6
-                          className={`fw-bold mb-1 capitalize ${
-                            step.current ? "text-amber" : "text-dark"
+                          className={`font-bold mb-1 capitalize text-sm ${
+                            step.current ? "text-amber-500" : "text-gray-800"
                           }`}
                         >
                           {step.status}
                         </h6>
-                        <p className="text-muted small mb-1">{step.desc}</p>
-                        <div className="d-flex align-items-center gap-3">
-                          <small className="text-muted fw-semibold bg-light px-2 py-1 rounded">
-                            <Clock size={12} className="me-1" /> {step.date}
-                          </small>
+                        <p className="text-gray-500 text-xs mb-2">
+                          {step.desc}
+                        </p>
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <span className="text-xs text-gray-500 font-semibold bg-gray-100 px-2 py-1 rounded flex items-center gap-1">
+                            <Clock size={12} />
+                            {step.date}
+                          </span>
                           {step.location && (
-                            <small className="text-muted">
-                              <MapPin size={12} className="me-1" />{" "}
+                            <span className="text-xs text-gray-400 flex items-center gap-1">
+                              <MapPin size={12} />
                               {step.location}
-                            </small>
+                            </span>
                           )}
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-              </Card.Body>
-            </Card>
-          </Col>
+              </div>
+            </div>
+          </div>
 
-          <Col lg={4}>
-            {/* Courier Details from latest status */}
-            <Card className="border-0 shadow-sm mb-4">
-              <Card.Body className="p-4">
-                <h6 className="fw-bold mb-3 d-flex align-items-center">
-                  <Package size={18} className="me-2 text-amber" /> Courier
-                  Details
+          {/* Right Column */}
+          <div className="lg:w-1/3 flex flex-col gap-6">
+            {/* Courier Details */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
+              <div className="p-5">
+                <h6 className="font-bold mb-4 flex items-center gap-2 text-gray-800">
+                  <Package size={18} className="text-amber-500" />
+                  Courier Details
                 </h6>
-                <div className="d-flex align-items-center justify-content-between mb-3 bg-light p-3 rounded-3">
-                  <span className="fw-bold">
-                    {order.status.find(
-                      (s: any) => s.status_details?.courier_name
-                    )?.status_details.courier_name || "Shipping Partner"}
+                <div className="flex items-center justify-between mb-4 bg-gray-50 p-3 rounded-xl">
+                  <span className="font-bold text-gray-800 text-sm">
+                    {courierName}
                   </span>
                 </div>
-
-                <div className="mb-3">
-                  <label className="small text-muted fw-bold">AWB Code</label>
-                  <div className="d-flex align-items-center mt-1">
-                    <span className="fs-6 fw-bold me-2 font-monospace">
-                      {order.status.find((s: any) => s.status_details?.awb_code)
-                        ?.status_details.awb_code || "N/A"}
+                <div>
+                  <label className="text-xs text-gray-400 font-bold uppercase tracking-wider">
+                    AWB Code
+                  </label>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-base font-bold font-mono text-gray-900">
+                      {awbCode}
                     </span>
-                    <Button variant="link" size="sm" className="text-muted p-0">
+                    <button className="text-gray-400 hover:text-gray-600 transition-colors p-0">
                       <Copy size={16} />
-                    </Button>
+                    </button>
                   </div>
                 </div>
-              </Card.Body>
-            </Card>
+              </div>
+            </div>
 
-            {/* Address from customer_address_id */}
-            <Card className="border-0 shadow-sm mb-4">
-              <Card.Body className="p-4">
-                <h6 className="fw-bold mb-3 d-flex align-items-center">
-                  <MapPin size={18} className="me-2 text-amber" /> Shipping To
+            {/* Shipping Address */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
+              <div className="p-5">
+                <h6 className="font-bold mb-4 flex items-center gap-2 text-gray-800">
+                  <MapPin size={18} className="text-amber-500" />
+                  Shipping To
                 </h6>
-                <p className="mb-1 fw-bold">
+                <p className="font-bold text-gray-800 mb-1 text-sm">
                   {order.customer_address_id?.name}
                 </p>
-                <p className="text-muted small mb-0">
+                <p className="text-gray-500 text-sm leading-relaxed">
                   {order.customer_address_id?.addressLine1},{" "}
                   {order.customer_address_id?.addressLine2}
                   <br />
@@ -239,11 +256,11 @@ const TrackingPage: React.FC = () => {
                   {order.customer_address_id?.state}{" "}
                   {order.customer_address_id?.pincode}
                 </p>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </Layout>
   );
 };
