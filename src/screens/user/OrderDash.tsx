@@ -36,6 +36,7 @@ import {
 } from "../../components/order-dash/LabelPreviewModal";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import OrderStatusModal from "../../components/order-dash/StatusModal";
 
 export interface Order {
   _id: string;
@@ -406,11 +407,12 @@ const OrderDash = () => {
       toast.error(err.response?.data?.message || "Linking failed");
     }
   };
-
+const [status,setStatus] = useState(false);
+const [statusList,setStatusList] = useState<any | null>(null)
   return (
    <>
   <div className="w-full">
-    {/* Top Notice Banner */}
+    
    
 
     {/* Header Section */}
@@ -443,41 +445,84 @@ const OrderDash = () => {
     </div>
 
         {/* Modern Segmented Tabs Section */}
-        <div className="flex items-center p-1 bg-gray-100/80 backdrop-blur-sm rounded-2xl w-max mb-6 border border-gray-200/50">
-          {tabs.map((tabs) => {
-            const isActive = tab === tabs.key;
+<div className="pb-24 md:pb-0">
+  <div
+    className="
+      fixed bottom-0 left-0 w-full z-50
+      bg-[#f4f5f7] border-t border-gray-200 shadow-lg
 
-            return (
-              <button
-                key={tabs.key}
-                onClick={() => setTab(tabs.key)}
-                className={`relative flex items-center gap-2 px-5 py-2 text-sm font-medium rounded-xl transition-colors duration-300 outline-none ${
-                  isActive
-                    ? "text-gray-900"
-                    : "text-gray-500 hover:text-gray-700"
-                }`}
-                style={{ WebkitTapHighlightColor: "transparent" }}
-              >
-                {/* The Sliding Pill Background */}
-                {isActive && (
-                  <motion.div
-                    layoutId="active-tab-pill"
-                    className="absolute inset-0 bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
+      flex items-center justify-around
 
-                {/* Tab Content (Z-index ensures it sits above the sliding pill) */}
-                <span className="relative z-10 flex items-center gap-2">
-                  <span className={isActive ? "text-[#F5891E]" : "opacity-70"}>
-                    {tabs.icon}
-                  </span>
-                  {tabs.label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+      px-1 py-2
+
+      md:static md:w-max md:bg-gray-100/80
+      md:backdrop-blur-sm md:rounded-2xl
+      md:border md:border-gray-200/50
+      md:shadow-none md:p-1
+      md:mb-6
+    "
+  >
+    {tabs.map((tabs) => {
+      const isActive = tab === tabs.key;
+
+      return (
+        <button
+          key={tabs.key}
+          onClick={() => setTab(tabs.key)}
+          className={`
+            relative flex flex-col items-center justify-center
+            gap-1 px-2 py-2 rounded-xl
+            transition-colors duration-300 outline-none
+
+            flex-1 md:flex-row md:flex-initial md:gap-2
+            md:px-5 md:py-2
+
+            ${
+              isActive
+                ? "text-gray-900"
+                : "text-gray-500 hover:text-gray-700"
+            }
+          `}
+          style={{ WebkitTapHighlightColor: "transparent" }}
+        >
+          {/* Same Desktop Active Effect */}
+          {isActive && (
+            <motion.div
+              layoutId="active-tab-pill"
+              className="
+                absolute inset-0
+                bg-white
+                rounded-xl
+                shadow-[0_2px_8px_rgba(0,0,0,0.06)]
+              "
+              transition={{
+                type: "spring",
+                bounce: 0.2,
+                duration: 0.6,
+              }}
+            />
+          )}
+
+          {/* Tab Content */}
+          <span className="relative z-10 flex flex-col items-center md:flex-row md:gap-2">
+            <span
+              className={`
+                text-lg md:text-base
+                ${isActive ? "text-[#F5891E]" : "opacity-70"}
+              `}
+            >
+              {tabs.icon}
+            </span>
+
+            <span className="text-[10px] md:text-sm font-medium whitespace-nowrap">
+              {tabs.label}
+            </span>
+          </span>
+        </button>
+      );
+    })}
+  </div>
+</div>
       </div>
       <OrderTable
         orders={orders}
@@ -494,6 +539,8 @@ const OrderDash = () => {
         onPrintLabel={handlePrintLabel}
         onAutoBook={handleAutoBook}
         onCancelOrder={handleCancelOrder}
+        setStatusList={setStatusList}
+        setStatus={setStatus}
       />
       <Pagination
         currentPage={page}
@@ -543,6 +590,7 @@ const OrderDash = () => {
         }}
       />
       <LabelPrinter ref={printerRef} labelData={labelData} />
+      <OrderStatusModal open={status} status={statusList} setOpen={setStatus} />
     </>
   );
 };

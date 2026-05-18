@@ -135,8 +135,6 @@ interface PaymentMethod {
 const ShippingLabel = ({ labelData }: any) => {
   const data = labelData;
   return (
-
-    
     <div
       style={{
         width: "100mm",
@@ -150,16 +148,7 @@ const ShippingLabel = ({ labelData }: any) => {
         justifyContent: "space-between",
         boxSizing: "border-box",
         backgroundColor: "white",
-      }}
-
-
-
-
-
-
-
-      
-    >
+      }}>
       <div className="header" style={{ textAlign: "center" }}>
         <h2 style={{ margin: "0 0 6px 0", fontWeight: "bold" }}>
           {data.courier_name}
@@ -171,8 +160,7 @@ const ShippingLabel = ({ labelData }: any) => {
         <Barcode value={data.waybill} height={60} fontSize={16} />
         <div
           className="row"
-          style={{ display: "flex", justifyContent: "space-evenly" }}
-        >
+          style={{ display: "flex", justifyContent: "space-evenly" }}>
           <div className="col">{data.date}</div>
           <div className="col">{data.sort_code}</div>
         </div>
@@ -186,8 +174,7 @@ const ShippingLabel = ({ labelData }: any) => {
         </div>
         <div
           className="orders-header d-flex align-items-center justify-content-between mb-3"
-          style={{ gap: 12 }}
-        >
+          style={{ gap: 12 }}>
           {data.customer_address}, {data.customer_address2} -{" "}
           {data.customer_pincode}
         </div>
@@ -222,15 +209,13 @@ const ShippingLabel = ({ labelData }: any) => {
             verticalAlign: "top",
             borderColor: "#dee2e6",
             fontSize: 12,
-          }}
-        >
+          }}>
           <thead
             style={{
               verticalAlign: "bottom",
               borderStyle: "solid",
               borderBottomWidth: "0.4px",
-            }}
-          >
+            }}>
             <tr>
               <td style={{ padding: "3px!important" }}>Product Name</td>
               <td style={{ padding: "3px" }}>Qty</td>
@@ -260,8 +245,7 @@ const ShippingLabel = ({ labelData }: any) => {
         <div style={{ textAlign: "center" }}>
           <div
             className="row justify-content-space-evenly"
-            style={{ display: "flex", justifyContent: "space-evenly" }}
-          >
+            style={{ display: "flex", justifyContent: "space-evenly" }}>
             <span className="col-md-6">{data.date}</span>
             <span className="col-md-6">{data.route}</span>
           </div>
@@ -283,8 +267,7 @@ const ShippingLabel = ({ labelData }: any) => {
 
       <div
         className="footer"
-        style={{ textAlign: "center", fontSize: "10px", color: "#555" }}
-      >
+        style={{ textAlign: "center", fontSize: "10px", color: "#555" }}>
         <hr />
         <div>
           All orders are shipped exclusively via OrderzUp. We do not hold any
@@ -387,7 +370,7 @@ const Orders: React.FC = () => {
     page: number = 1,
     limit: number = rowsPerPage,
     filterParams: FilterParams = filters,
-    tab: string = activeTab
+    tab: string = activeTab,
   ) => {
     setIsLoading(true);
     try {
@@ -489,7 +472,7 @@ const Orders: React.FC = () => {
         shipmentOrder?._id,
         courier_id,
         selectedWarehouse.warehouseAddress.warehouse_id,
-        false
+        false,
       );
       toast.success(response.message);
       if (response) {
@@ -527,14 +510,14 @@ const Orders: React.FC = () => {
 
     const totalAmount: any = Object.values(courierTotals).reduce(
       (sum: any, val: any) => sum + val,
-      0
+      0,
     );
 
     if (
       confirm(
         `📦 Courier Booking Summary:\n\n${breakdownText}\n\nTotal: ₹${totalAmount.toFixed(
-          2
-        )}\n\nDo you want to proceed?`
+          2,
+        )}\n\nDo you want to proceed?`,
       ) === false
     ) {
       setShipNowLoading(false);
@@ -542,7 +525,7 @@ const Orders: React.FC = () => {
     }
     len > 1 &&
       toast.info(
-        `Booking couriers for ${len} orders. Please do not refresh...`
+        `Booking couriers for ${len} orders. Please do not refresh...`,
       );
 
     let doneCount = 0;
@@ -563,7 +546,7 @@ const Orders: React.FC = () => {
             order._id,
             courier_id,
             warehouse_id,
-            false
+            false,
           );
           toast.success(`Order ${order.order_id}: ${response.message}`);
           doneCount++;
@@ -581,7 +564,7 @@ const Orders: React.FC = () => {
           toast.error(`Failed booking for order ${order.order_id}:` + err);
           toast.error(`Order ${order.order_id}: Failed to book shipment.`);
         }
-      })
+      }),
     );
 
     setShipNowLoading(false);
@@ -665,7 +648,7 @@ const Orders: React.FC = () => {
 
   const handleSelectShipment = async (
     order_id: Order["_id"],
-    shipment: any
+    shipment: any,
   ) => {
     const res = await updateOrder(order_id, {
       recomended_courier_id: shipment._id,
@@ -683,7 +666,7 @@ const Orders: React.FC = () => {
     const res = pickupDate && (await schedulePickup(pickupOrder, pickupDate));
     if (res) {
       toast.success(
-        "Pickup Scheduled for " + pickupDate.toISOString().split("T")[0]
+        "Pickup Scheduled for " + pickupDate.toISOString().split("T")[0],
       );
       innitialFetch();
       handlePickupClose();
@@ -727,7 +710,7 @@ const Orders: React.FC = () => {
     setShipNowLoading(true);
     len > 1 &&
       toast.info(
-        `Processing ${len} orders for shipment. Please do not refresh the page...`
+        `Processing ${len} orders for shipment. Please do not refresh the page...`,
       );
     let doneCount = 0;
     Promise.all(
@@ -736,7 +719,7 @@ const Orders: React.FC = () => {
           handleEdit(row);
           setShipNowLoading(false);
           toast.error(
-            "Please resolve the issues before proceeding with shipment."
+            "Please resolve the issues before proceeding with shipment.",
           );
         } else {
           const commonWarehouse = getCommonWarehouses(row);
@@ -746,24 +729,24 @@ const Orders: React.FC = () => {
           }
           const response = await checkShipmentServiceavailablity(
             row,
-            commonWarehouse
+            commonWarehouse,
           );
           if (response) {
             if (response.inventoryUpdate.length > 0) {
               response.inventoryUpdate.forEach((i: any) => {
                 i.success
                   ? toast.success(
-                      `${i.channel_account}: ${i.sku_id} – ${i.message}`
+                      `${i.channel_account}: ${i.sku_id} – ${i.message}`,
                     )
                   : toast.error(
-                      `${i.channel_account}: ${i.sku_id} – ${i.message}. Try manual updation.`
+                      `${i.channel_account}: ${i.sku_id} – ${i.message}. Try manual updation.`,
                     );
               });
             }
             doneCount++;
             len > 1 &&
               toast.success(
-                `Shipment service available for order ${doneCount} of ${len}`
+                `Shipment service available for order ${doneCount} of ${len}`,
               );
             if (doneCount === len) {
               fetchOrders(currentPage, rowsPerPage, filters); // Refresh orders
@@ -780,7 +763,7 @@ const Orders: React.FC = () => {
             setShipNowLoading(false);
           }
         }
-      })
+      }),
     );
   };
 
@@ -927,7 +910,7 @@ const Orders: React.FC = () => {
       // MOCK CALL:
       const res = await appAxios.post(
         `${productSKUChannelLinks_url}/create-from-order`,
-        payload
+        payload,
       );
 
       if (res.data.success) {
@@ -972,7 +955,7 @@ const Orders: React.FC = () => {
   };
   const handleBulkPrint = (orders: Order[]) => {
     toast.info(
-      "Printing labels for " + orders.length + " orders. Please wait..."
+      "Printing labels for " + orders.length + " orders. Please wait...",
     );
 
     if (selectedOrders.length == 0) {
@@ -1016,8 +999,7 @@ const Orders: React.FC = () => {
             flexDirection: "column",
             gap: "4px",
             padding: "6px 4px",
-          }}
-        >
+          }}>
           <div style={{ fontWeight: 600, color: "#000434" }}>
             <span style={{ color: "#F5891E" }}>#{row.order_id || "—"}</span>
           </div>
@@ -1055,8 +1037,7 @@ const Orders: React.FC = () => {
                         String(row.store_order_id).trim() +
                         "\nChannel Order ID:" +
                         String(row.channel_order_id).trim()
-                      }
-                    >
+                      }>
                       {" "}
                       {String(row.store_order_id).trim()}
                     </span>
@@ -1098,10 +1079,10 @@ const Orders: React.FC = () => {
           row.remittance_status === "pending"
             ? "#ffc107"
             : row.remittance_status === "completed"
-            ? "#28a745"
-            : row.remittance_status === "processing"
-            ? "#007bff"
-            : "#6c757d";
+              ? "#28a745"
+              : row.remittance_status === "processing"
+                ? "#007bff"
+                : "#6c757d";
 
         return (
           <div style={{ fontSize: "11px", lineHeight: "1.4" }}>
@@ -1113,8 +1094,7 @@ const Orders: React.FC = () => {
                 textDecoration: "underline",
                 marginBottom: "4px",
                 // padding: "6px 4px",
-              }}
-            >
+              }}>
               {hasValue(row.product_name) ? (
                 <OverlayTrigger
                   placement="top"
@@ -1124,8 +1104,7 @@ const Orders: React.FC = () => {
                       <br />
                       ID: {row.product_sku_id || "—"}
                     </Tooltip>
-                  }
-                >
+                  }>
                   <span style={{ cursor: "pointer" }}>
                     {String(row.product_name).slice(0, 40) +
                       (String(row.product_name).trim().length > 40
@@ -1138,8 +1117,7 @@ const Orders: React.FC = () => {
               )}
             </div>
             <div
-              style={{ fontStyle: "italic", color: "#555", marginTop: "4px" }}
-            >
+              style={{ fontStyle: "italic", color: "#555", marginTop: "4px" }}>
               SKU:{" "}
               {row.product_sku_id ? (
                 <span style={{ color: "#28a745", fontWeight: 600 }}>
@@ -1154,8 +1132,7 @@ const Orders: React.FC = () => {
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent row click
                     handleOpenLinkModal(row);
-                  }}
-                >
+                  }}>
                   ⚠️ Link Now
                 </Button>
               )}
@@ -1173,8 +1150,7 @@ const Orders: React.FC = () => {
                   color: !row.payment_method?.toLowerCase().includes("cod")
                     ? "#28a745"
                     : "#d9534f",
-                }}
-              >
+                }}>
                 ₹{amount} (
                 {row.payment_method?.toLowerCase().includes("cod")
                   ? "COD"
@@ -1193,8 +1169,7 @@ const Orders: React.FC = () => {
                   borderRadius: "4px",
                   backgroundColor: remittanceColor,
                   color: "#fff",
-                }}
-              >
+                }}>
                 {row.remittance_status.toUpperCase()}
               </span>
             )}
@@ -1212,7 +1187,7 @@ const Orders: React.FC = () => {
           ? [...row.status].sort(
               (a: any, b: any) =>
                 new Date(b.status_date).getTime() -
-                new Date(a.status_date).getTime()
+                new Date(a.status_date).getTime(),
             )[0]
           : null;
         const editable =
@@ -1231,12 +1206,10 @@ const Orders: React.FC = () => {
                 gap: 4,
                 fontWeight: 600,
                 color: "#000434",
-              }}
-            >
+              }}>
               <span
                 style={{ textDecoration: "underline", cursor: "pointer" }}
-                onClick={() => editable && handleEdit(row)}
-              >
+                onClick={() => editable && handleEdit(row)}>
                 {row.customer_name || "—"}
               </span>
               {editable && (
@@ -1252,8 +1225,7 @@ const Orders: React.FC = () => {
                     display: "inline-flex",
                     alignItems: "center",
                   }}
-                  title="Edit customer"
-                >
+                  title="Edit customer">
                   <BiSolidPencil />
                 </span>
               )}
@@ -1370,7 +1342,7 @@ const Orders: React.FC = () => {
           ? [...row.status].sort(
               (a: any, b: any) =>
                 new Date(b.status_date).getTime() -
-                new Date(a.status_date).getTime()
+                new Date(a.status_date).getTime(),
             )
           : [];
         const latestStatusName =
@@ -1389,8 +1361,7 @@ const Orders: React.FC = () => {
                   margin: "4px 4px",
                   padding: "2px 2px",
                   textAlign: "center",
-                }}
-              >
+                }}>
                 {/* <OUAIIcon style={{ width: 14,}} /> */}
 
                 <span style={{ fontSize: 12, fontWeight: 500 }}>
@@ -1435,8 +1406,7 @@ const Orders: React.FC = () => {
                   color: "#213bb4",
                   cursor: "help",
                 }}
-                onClick={() => setStatusList(sortedStatus)}
-              >
+                onClick={() => setStatusList(sortedStatus)}>
                 {latestStatusName}
               </span>
             </div>
@@ -1461,13 +1431,11 @@ const Orders: React.FC = () => {
               gap: "4px",
               fontSize: "11px",
               padding: "6px 4px",
-            }}
-          >
+            }}>
             {issues.map((issue: any, idx: number) => (
               <div
                 key={idx}
-                style={{ color: "#d9534f", fontWeight: 600, width: "100%" }}
-              >
+                style={{ color: "#d9534f", fontWeight: 600, width: "100%" }}>
                 ⚠ {issue.message || issue}
               </div>
             ))}
@@ -1482,8 +1450,7 @@ const Orders: React.FC = () => {
                   borderRadius: "12px",
                   padding: "2px 8px",
                   fontWeight: 600,
-                }}
-              >
+                }}>
                 Other Orders: {risk.customer_order_count_in_channel}
               </span>
             )}
@@ -1495,8 +1462,7 @@ const Orders: React.FC = () => {
                   borderRadius: "12px",
                   padding: "2px 8px",
                   fontWeight: 600,
-                }}
-              >
+                }}>
                 Duplicate
               </span>
             )}
@@ -1508,8 +1474,7 @@ const Orders: React.FC = () => {
                   borderRadius: "12px",
                   padding: "2px 8px",
                   fontWeight: 600,
-                }}
-              >
+                }}>
                 Suspicious Addr
               </span>
             )}
@@ -1521,8 +1486,7 @@ const Orders: React.FC = () => {
                   borderRadius: "12px",
                   padding: "2px 8px",
                   fontWeight: 600,
-                }}
-              >
+                }}>
                 RTO: {risk.pincode_rto_percent.toFixed(1)}%
               </span>
             )}
@@ -1536,8 +1500,7 @@ const Orders: React.FC = () => {
                     borderRadius: "12px",
                     padding: "2px 8px",
                     fontWeight: 600,
-                  }}
-                >
+                  }}>
                   No Risk Flags
                 </span>
               )}
@@ -1570,7 +1533,7 @@ const Orders: React.FC = () => {
           ? [...row.status].sort(
               (a: any, b: any) =>
                 new Date(b.status_date).getTime() -
-                new Date(a.status_date).getTime()
+                new Date(a.status_date).getTime(),
             )[0]
           : null;
         const statusStr = latestStatus?.status?.toLowerCase() || "";
@@ -1597,8 +1560,7 @@ const Orders: React.FC = () => {
               flexDirection: "column",
               gap: "6px",
               alignItems: "center",
-            }}
-          >
+            }}>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
               <Button
                 size="sm"
@@ -1607,8 +1569,8 @@ const Orders: React.FC = () => {
                   hasAwb && canAction
                     ? "outline-primary"
                     : !hasAwb && statusStr !== "cancelled"
-                    ? "warning"
-                    : "outline-secondary"
+                      ? "warning"
+                      : "outline-secondary"
                 }
                 style={{
                   minWidth: 84,
@@ -1622,25 +1584,23 @@ const Orders: React.FC = () => {
                   hasAwb && canAction
                     ? "Schedule Pickup"
                     : !hasAwb && statusStr !== "cancelled"
-                    ? "Ship this order now"
-                    : "No primary action"
-                }
-              >
+                      ? "Ship this order now"
+                      : "No primary action"
+                }>
                 {hasAwb && canAction
                   ? "Pickup"
                   : !hasAwb && statusStr !== "cancelled"
-                  ? "Ship Now"
-                  : statusStr === "cancelled"
-                  ? "Cancelled"
-                  : "Action"}
+                    ? "Ship Now"
+                    : statusStr === "cancelled"
+                      ? "Cancelled"
+                      : "Action"}
               </Button>
 
               <Dropdown align="end">
                 <Dropdown.Toggle
                   variant="link"
                   size="sm"
-                  id={`actions-dd-${row._id}`}
-                >
+                  id={`actions-dd-${row._id}`}>
                   {/* <FaEllipsisV /> */}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
@@ -1661,8 +1621,7 @@ const Orders: React.FC = () => {
                         🚚 Ship Now
                       </Dropdown.Item>
                       <Dropdown.Item
-                        onClick={() => handleBookBulkShipment([row])}
-                      >
+                        onClick={() => handleBookBulkShipment([row])}>
                         📦 Recommend / Book
                       </Dropdown.Item>
                     </>
@@ -1672,10 +1631,9 @@ const Orders: React.FC = () => {
                     onClick={() =>
                       handleCancelOrder(
                         row,
-                        statusStr === "cancelled" ? "re_activate" : "cancelled"
+                        statusStr === "cancelled" ? "re_activate" : "cancelled",
                       )
-                    }
-                  >
+                    }>
                     {statusStr === "cancelled" ? "Re-Activate" : "❌ Cancel"}
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -1751,7 +1709,7 @@ const Orders: React.FC = () => {
           ? row.status.sort(
               (a: any, b: any) =>
                 new Date(b.status_date).getTime() -
-                new Date(a.status_date).getTime()
+                new Date(a.status_date).getTime(),
             )[0]
           : null;
         return latestStatus && latestStatus.status === "cancelled";
@@ -1764,23 +1722,30 @@ const Orders: React.FC = () => {
     },
   ];
 
- 
-return (
-  <div className="container">
+  return (
+    <div className="container">
+      {/* Important Notice */}
 
-    {/* Important Notice */}
-    <div className="w-full mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-900 shadow-sm">
-      <span className="font-bold text-amber-950">
-        Important Notice:
-      </span>{" "}
-      In order to provide better service to your brand, we have launched our
-      new Orders Panel — faster, more efficient, reliable, and secure. We
-      encourage all users to start using the new panel. The Old Orders page
-      will be deprecated from{" "}
-      <span className="font-bold">1st July 2026</span>. However, your
-      historical orders will still be accessible through our support team
-      whenever required.
-    </div>
+     <div className="mb-2 rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 px-3 py-2 shadow-sm">
+  <div className="flex items-start gap-2">
+    <span className="text-sm leading-5">📢</span>
+
+      <p className="mb-0 text-[13px] leading-5 text-gray-700">
+  <span className="font-semibold text-amber-900">
+    Important Notice :
+  </span>{" "}
+  In order for a better service to your brand we are working deliberately hard
+  to give you our best in same, we have launched our new orders panel which is
+  fast, efficient as well as reliable and secure hence we want all the users to
+  use that. As of{" "}
+  <span className="font-semibold text-[#815b50]">
+    1st July 2026
+  </span>{" "}
+  we are going to deprecate old orders page. But you can access your old orders
+  easily by contacting us.
+</p>
+  </div>
+</div>
 
       <style>{`
         /* Orders screen responsive styles */
@@ -1826,7 +1791,7 @@ return (
                       ? o.status.sort(
                           (a: any, b: any) =>
                             new Date(b.status_date).getTime() -
-                            new Date(a.status_date).getTime()
+                            new Date(a.status_date).getTime(),
                         )[0]
                       : null;
                     return (
@@ -1835,7 +1800,7 @@ return (
                       (!latestStatus || latestStatus.status !== "cancelled") &&
                       o
                     );
-                  })
+                  }),
                 );
               }}
               className="me-3"
@@ -1854,8 +1819,7 @@ return (
                 boxShadow: "0 0 16px rgba(0, 0, 0, 0.5)",
                 // marginBottom: 8,
                 animation: "pulseGlow 1.8s infinite ease-in-out",
-              }}
-            >
+              }}>
               <OUAIIcon style={{ width: 16, height: 16 }} />
               Auto Assign Courier
             </Button>
@@ -1870,7 +1834,7 @@ return (
                       ? o.status.sort(
                           (a: any, b: any) =>
                             new Date(b.status_date).getTime() -
-                            new Date(a.status_date).getTime()
+                            new Date(a.status_date).getTime(),
                         )[0]
                       : null;
 
@@ -1881,11 +1845,10 @@ return (
                       o &&
                       (!latestStatus || latestStatus.status !== "cancelled")
                     );
-                  })
+                  }),
                 );
               }}
-              className="me-2"
-            >
+              className="me-2">
               🚚 Book Couriers
             </Button>
           )}
@@ -1899,17 +1862,16 @@ return (
                       ? o.status.sort(
                           (a: any, b: any) =>
                             new Date(b.status_date).getTime() -
-                            new Date(a.status_date).getTime()
+                            new Date(a.status_date).getTime(),
                         )[0]
                       : null;
 
                     return latestStatus?.status
                       ?.toLowerCase()
                       .includes("label generated");
-                  })
+                  }),
                 );
-              }}
-            >
+              }}>
               🖨️ Print Labels
             </Button>
           )}
@@ -1919,8 +1881,7 @@ return (
         show={showLinkModal}
         onHide={() => setShowLinkModal(false)}
         size="lg"
-        centered
-      >
+        centered>
         <Modal.Header closeButton>
           <Modal.Title className="text-primary">
             🔗 Link & Create Product
@@ -2054,8 +2015,7 @@ return (
         <Modal.Footer>
           <Button
             variant="outline-secondary"
-            onClick={() => setShowLinkModal(false)}
-          >
+            onClick={() => setShowLinkModal(false)}>
             Cancel
           </Button>
           <Button variant="primary" onClick={handleLinkSubmit}>
@@ -2067,8 +2027,7 @@ return (
         show={showFilters}
         onHide={() => setShowFilters(false)}
         size="lg"
-        centered
-      >
+        centered>
         <Modal.Header closeButton>
           <Modal.Title>Filter Orders</Modal.Title>
         </Modal.Header>
@@ -2097,8 +2056,7 @@ return (
                   <Form.Label>Channel Account</Form.Label>
                   <Form.Select
                     value={channelAccountId}
-                    onChange={(e) => setChannelAccountId(e.target.value)}
-                  >
+                    onChange={(e) => setChannelAccountId(e.target.value)}>
                     <option value="">All Channel Accounts</option>
                     {channelAccounts.map((account) => (
                       <option key={account._id} value={account._id}>
@@ -2114,8 +2072,7 @@ return (
                   <Form.Label>Warehouse</Form.Label>
                   <Form.Select
                     value={warehouseId}
-                    onChange={(e) => setWarehouseId(e.target.value)}
-                  >
+                    onChange={(e) => setWarehouseId(e.target.value)}>
                     <option value="">All Warehouses</option>
                     {warehouses.map((warehouse) => (
                       <option key={warehouse._id} value={warehouse._id}>
@@ -2134,8 +2091,7 @@ return (
                   <Form.Label>Product SKU</Form.Label>
                   <Form.Select
                     value={productSKUId}
-                    onChange={(e) => setProductSKUId(e.target.value)}
-                  >
+                    onChange={(e) => setProductSKUId(e.target.value)}>
                     <option value="">All Product SKUs</option>
                     {productSKUs.map((sku) => (
                       <option key={sku._id} value={sku._id}>
@@ -2151,8 +2107,7 @@ return (
                   <Form.Label>Payment Method</Form.Label>
                   <Form.Select
                     value={paymentMethod}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                  >
+                    onChange={(e) => setPaymentMethod(e.target.value)}>
                     <option value="">All Payment Methods</option>
                     {paymentMethods.map((method) => (
                       <option key={method.method} value={method.method}>
@@ -2173,10 +2128,12 @@ return (
                     value={selectedStatuses}
                     onChange={(e) =>
                       setSelectedStatuses(
-                        Array.from(e.target.selectedOptions, (opt) => opt.value)
+                        Array.from(
+                          e.target.selectedOptions,
+                          (opt) => opt.value,
+                        ),
                       )
-                    }
-                  >
+                    }>
                     {allStatus.map((status) => (
                       <option key={status.status} value={status.status}>
                         {status.status} ({status.count})
@@ -2195,20 +2152,21 @@ return (
                     value={selectedCouriers}
                     onChange={(e) =>
                       setSelectedCouriers(
-                        Array.from(e.target.selectedOptions, (opt) => opt.value)
+                        Array.from(
+                          e.target.selectedOptions,
+                          (opt) => opt.value,
+                        ),
                       )
-                    }
-                  >
+                    }>
                     {courierPartners.map(
                       (courier) =>
                         courier.courier && (
                           <option
                             key={courier.shipping_courier_id}
-                            value={courier.shipping_courier_id}
-                          >
+                            value={courier.shipping_courier_id}>
                             {courier.courier} ({courier.count})
                           </option>
-                        )
+                        ),
                     )}
                   </Form.Select>
                 </Form.Group>
@@ -2250,86 +2208,141 @@ return (
             onClick={() => {
               applyFilters();
               setShowFilters(false);
-            }}
-          >
+            }}>
             Apply Filters
           </Button>
         </Modal.Footer>
       </Modal>
-      <Modal
-        show={statusList.length > 0}
-        onHide={() => {
-          setStatusList([]);
-        }}
-        size="lg"
-        centered
-        scrollable
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Status History</Modal.Title>
-        </Modal.Header>
+      ```tsx id="dy0x91"
+<Modal
+  show={statusList.length > 0}
+  onHide={() => setStatusList([])}
+  centered
+  backdrop={true}
+  keyboard={false}
+  contentClassName="rounded-3xl border-0 shadow-2xl bg-white"
+  dialogClassName="flex items-center justify-center min-h-screen m-0 px-3"
+>
+  <div className="w-full max-w-5xl">
+    
+    {/* Header */}
+    <Modal.Header
+      closeButton
+      className="px-6 py-4 border-b border-gray-200 bg-white rounded-t-3xl"
+    >
+      <Modal.Title className="text-2xl font-bold text-gray-800">
+        Status History
+      </Modal.Title>
+    </Modal.Header>
 
-        <Modal.Body>
-          <Table striped bordered hover size="sm">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Status</th>
-                <th>Status Date</th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              {statusList.map((item: any, index: any) => (
-                <tr>
-                  <td>{index + 1}</td>
-                  <td>{item.status}</td>
-                  <td>{new Date(item.status_date).toLocaleString()}</td>
-                  <td>
-                    {" "}
-                    {item.status_details
-                      ? typeof item.status_details === "object"
-                        ? Object.entries(item.status_details).map(
-                            ([key, value]) => (
-                              <div key={key}>
-                                <strong>{key}:</strong> {String(value)}
-                              </div>
-                            )
-                          )
-                        : // If it's a JSON string, try parsing
-                          (() => {
-                            try {
-                              const parsed = JSON.parse(item.status_details);
-                              return Object.entries(parsed).map(
-                                ([key, value]) => (
-                                  <div key={key}>
-                                    <strong>{key}:</strong> {String(value)}
-                                  </div>
-                                )
-                              );
-                            } catch {
-                              return String(item.status_details);
-                            }
-                          })()
-                      : "-"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setStatusList([]);
-            }}
+    {/* Body */}
+    <Modal.Body className="p-5 max-h-[75vh] overflow-y-auto bg-white">
+      <div className="flex flex-col gap-4">
+        {statusList.map((item: any, index: number) => (
+          <div
+            key={index}
+            className="border border-gray-200 rounded-2xl p-5 bg-white shadow-sm"
           >
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+            {/* Top Row */}
+            <div className="flex flex-wrap justify-between items-start gap-3">
+              <div>
+                <p className="text-xs uppercase tracking-wider font-semibold text-gray-400">
+                  Status #{index + 1}
+                </p>
+
+                <h2 className="text-lg font-bold text-gray-800 mt-1">
+                  {item.status}
+                </h2>
+              </div>
+
+              <div className="text-sm text-gray-500 font-medium">
+                {new Date(item.status_date).toLocaleString()}
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="h-px bg-gray-200 my-4" />
+
+            {/* Details */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-700 mb-3">
+                Details
+              </h3>
+
+              <div className="flex flex-col gap-2">
+                {item.status_details ? (
+                  typeof item.status_details === "object" ? (
+                    Object.entries(item.status_details).map(
+                      ([key, value]) => (
+                        <div
+                          key={key}
+                          className="flex flex-wrap gap-2 text-sm"
+                        >
+                          <span className="font-semibold text-gray-800 min-w-[140px]">
+                            {key}:
+                          </span>
+
+                          <span className="text-gray-600 break-words">
+                            {String(value)}
+                          </span>
+                        </div>
+                      ),
+                    )
+                  ) : (
+                    (() => {
+                      try {
+                        const parsed = JSON.parse(item.status_details);
+
+                        return Object.entries(parsed).map(
+                          ([key, value]) => (
+                            <div
+                              key={key}
+                              className="flex flex-wrap gap-2 text-sm"
+                            >
+                              <span className="font-semibold text-gray-800 min-w-[140px]">
+                                {key}:
+                              </span>
+
+                              <span className="text-gray-600 break-words">
+                                {String(value)}
+                              </span>
+                            </div>
+                          ),
+                        );
+                      } catch {
+                        return (
+                          <span className="text-gray-600 text-sm">
+                            {String(item.status_details)}
+                          </span>
+                        );
+                      }
+                    })()
+                  )
+                ) : (
+                  <span className="text-gray-400 text-sm">
+                    No details available
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Modal.Body>
+
+    {/* Footer */}
+    <Modal.Footer className="px-6 py-4 border-t border-gray-200 bg-white rounded-b-3xl">
+      <Button
+        variant="dark"
+        className="rounded-xl px-5 py-2 font-semibold"
+        onClick={() => setStatusList([])}
+      >
+        Close
+      </Button>
+    </Modal.Footer>
+  </div>
+</Modal>
+```
 
       <div>
         <div className="orders-tabs d-flex justify-content-between align-items-center mb-2">
@@ -2339,19 +2352,16 @@ return (
               justifyContent: "space-between",
               width: "100%",
               margin: "0 20px",
-            }}
-          >
+            }}>
             <div
               style={{ display: "flex", flexDirection: "row", gap: 6 }}
-              className="col-md-8"
-            >
+              className="col-md-8">
               <div
                 style={{
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-between",
-                }}
-              >
+                }}>
                 <div
                   style={{
                     fontSize: 12,
@@ -2363,8 +2373,7 @@ return (
                     borderEndStartRadius: "14px",
                     display: "inline-flex",
                     alignItems: "center",
-                  }}
-                >
+                  }}>
                   <FaBoxOpen
                     style={{ marginRight: "4px", color: "#fff" }}
                     size={15}
@@ -2389,8 +2398,7 @@ return (
                   }}
                   onClick={() =>
                     activeTab !== "new_orders" && handleTabChange("new_orders")
-                  }
-                >
+                  }>
                   New
                   {activeTab === "new_orders" && (
                     <label
@@ -2401,8 +2409,7 @@ return (
                         borderRadius: "3px",
                         padding: "0px 6px",
                         fontSize: 10,
-                      }}
-                    >
+                      }}>
                       {totalOrders}
                     </label>
                   )}
@@ -2429,8 +2436,7 @@ return (
                   onClick={() =>
                     activeTab !== "pickup_pending" &&
                     handleTabChange("pickup_pending")
-                  }
-                >
+                  }>
                   Pickups
                   {activeTab === "pickup_pending" && (
                     <label
@@ -2441,8 +2447,7 @@ return (
                         borderRadius: "3px",
                         padding: "0px 6px",
                         fontSize: 10,
-                      }}
-                    >
+                      }}>
                       {totalOrders}
                     </label>
                   )}
@@ -2454,8 +2459,7 @@ return (
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-between",
-                }}
-              >
+                }}>
                 <div
                   style={{
                     fontSize: 12,
@@ -2467,8 +2471,7 @@ return (
                     borderEndStartRadius: "14px",
                     display: "inline-flex",
                     alignItems: "center",
-                  }}
-                >
+                  }}>
                   <FaTruck
                     style={{ marginRight: "4px", color: "#fff" }}
                     size={15}
@@ -2493,8 +2496,7 @@ return (
                   }}
                   onClick={() =>
                     activeTab !== "in_transit" && handleTabChange("in_transit")
-                  }
-                >
+                  }>
                   In Transit
                   {activeTab === "in_transit" && (
                     <label
@@ -2505,8 +2507,7 @@ return (
                         borderRadius: "3px",
                         padding: "0px 6px",
                         fontSize: 10,
-                      }}
-                    >
+                      }}>
                       {totalOrders}
                     </label>
                   )}
@@ -2530,8 +2531,7 @@ return (
                   }}
                   onClick={() =>
                     activeTab !== "delivered" && handleTabChange("delivered")
-                  }
-                >
+                  }>
                   Delivered
                   {activeTab === "delivered" && (
                     <label
@@ -2542,8 +2542,7 @@ return (
                         borderRadius: "3px",
                         padding: "0px 6px",
                         fontSize: 10,
-                      }}
-                    >
+                      }}>
                       {totalOrders}
                     </label>
                   )}
@@ -2566,8 +2565,7 @@ return (
                     borderEndEndRadius: "14px",
                     borderStartEndRadius: "14px",
                   }}
-                  onClick={() => activeTab !== "rto" && handleTabChange("rto")}
-                >
+                  onClick={() => activeTab !== "rto" && handleTabChange("rto")}>
                   RTO
                   {activeTab === "rto" && (
                     <label
@@ -2578,8 +2576,7 @@ return (
                         borderRadius: "3px",
                         padding: "0px 6px",
                         fontSize: 10,
-                      }}
-                    >
+                      }}>
                       {totalOrders}
                     </label>
                   )}
@@ -2590,8 +2587,7 @@ return (
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-between",
-                }}
-              >
+                }}>
                 <div
                   style={{
                     fontSize: 12,
@@ -2603,8 +2599,7 @@ return (
                     borderEndStartRadius: "14px",
                     display: "inline-flex",
                     alignItems: "center",
-                  }}
-                >
+                  }}>
                   <FaGear
                     style={{ marginRight: "4px", color: "#fff" }}
                     size={15}
@@ -2626,8 +2621,7 @@ return (
                     padding: "5px 10px",
                     textWrap: "nowrap",
                   }}
-                  onClick={() => activeTab !== "all" && handleTabChange("all")}
-                >
+                  onClick={() => activeTab !== "all" && handleTabChange("all")}>
                   All Orders
                   {activeTab === "all" && (
                     <label
@@ -2638,8 +2632,7 @@ return (
                         borderRadius: "3px",
                         padding: "0px 6px",
                         fontSize: 10,
-                      }}
-                    >
+                      }}>
                       {totalOrders}
                     </label>
                   )}
@@ -2665,8 +2658,7 @@ return (
                   }}
                   onClick={() =>
                     activeTab !== "others" && handleTabChange("others")
-                  }
-                >
+                  }>
                   Archived
                   {activeTab === "others" && (
                     <label
@@ -2677,8 +2669,7 @@ return (
                         borderRadius: "3px",
                         padding: "0px 6px",
                         fontSize: 10,
-                      }}
-                    >
+                      }}>
                       {totalOrders}
                     </label>
                   )}
@@ -2687,8 +2678,7 @@ return (
             </div>
             <div
               style={{ display: "flex", justifyContent: "flex-end" }}
-              className="col-md-4"
-            >
+              className="col-md-4">
               <Button
                 variant={"outline-secondary"}
                 // size="sm"
@@ -2696,8 +2686,7 @@ return (
                 style={{
                   marginLeft: "14px",
                   textWrap: "nowrap",
-                }}
-              >
+                }}>
                 <BsFillFunnelFill
                   onClick={() => setShowFilters(!showFilters)}
                   // size={"30px"}
@@ -2769,8 +2758,7 @@ return (
                     fontSize: 13,
                     color: "#000434",
                     fontFamily: "Hiragino Maru Gothic ProN W4",
-                  }}
-                >
+                  }}>
                   <div style={{ fontWeight: 600, color: "#000434" }}>
                     <span style={{ color: "#F5891E" }}>
                       #{editOrder?.order_id || "—"}
@@ -2810,8 +2798,7 @@ return (
                                 String(editOrder?.store_order_id).trim() +
                                 "\nChannel Order ID:" +
                                 String(editOrder?.channel_order_id).trim()
-                              }
-                            >
+                              }>
                               {" "}
                               {String(editOrder?.store_order_id).trim()}
                             </span>
@@ -2854,8 +2841,7 @@ return (
                     fontSize: 13,
                     color: "#000434",
                     fontFamily: "Hiragino Maru Gothic ProN W4",
-                  }}
-                >
+                  }}>
                   <div style={{ fontSize: "11px", lineHeight: "1.4" }}>
                     <div
                       style={{
@@ -2865,8 +2851,7 @@ return (
                         textDecoration: "underline",
                         marginBottom: "4px",
                         // padding: "6px 4px",
-                      }}
-                    >
+                      }}>
                       {hasValue(editOrder?.product_name) ? (
                         <OverlayTrigger
                           placement="top"
@@ -2876,8 +2861,7 @@ return (
                               <br />
                               ID: {editOrder?.product_sku_id || "—"}
                             </Tooltip>
-                          }
-                        >
+                          }>
                           <span style={{ cursor: "pointer" }}>
                             {String(editOrder?.product_name)}
                           </span>
@@ -2911,8 +2895,7 @@ return (
                             .includes("cod")
                             ? "#28a745"
                             : "#d9534f",
-                        }}
-                      >
+                        }}>
                         ₹
                         {editOrder?.first_line_item_price && editOrder?.quantity
                           ? Number(editOrder?.first_line_item_price) *
@@ -2942,13 +2925,13 @@ return (
                               editOrder?.remittance_status === "pending"
                                 ? "#ffc107"
                                 : editOrder?.remittance_status === "completed"
-                                ? "#28a745"
-                                : editOrder?.remittance_status === "processing"
-                                ? "#007bff"
-                                : "#6c757d",
+                                  ? "#28a745"
+                                  : editOrder?.remittance_status ===
+                                      "processing"
+                                    ? "#007bff"
+                                    : "#6c757d",
                             color: "#fff",
-                          }}
-                        >
+                          }}>
                           {editOrder?.remittance_status.toUpperCase()}
                         </span>
                       )}
@@ -2975,8 +2958,7 @@ return (
                         textAlign: "center",
                         boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
                         animation: "brandGlow 2.5s infinite ease-in-out",
-                      }}
-                    >
+                      }}>
                       <div
                         style={{
                           background:
@@ -2993,8 +2975,7 @@ return (
                           boxShadow: "0 0 6px rgba(0, 0, 0, 0.15)",
                           marginBottom: 8,
                           animation: "pulseGlow 1.8s infinite ease-in-out",
-                        }}
-                      >
+                        }}>
                         🤖 OU AI Recommended
                       </div>
                       <div style={{ fontSize: 13, marginBottom: 6 }}>
@@ -3011,8 +2992,7 @@ return (
                           boxShadow: "0 0 8px #F5891E",
                           userSelect: "none",
                           width: "fit-content",
-                        }}
-                      >
+                        }}>
                         🔄 RTO Risk:{" "}
                         <span style={{ color: "#F5891E", fontWeight: 600 }}>
                           ~10%
@@ -3176,15 +3156,13 @@ return (
             <Button
               type="submit"
               style={{ color: "primary" }}
-              className="m-r-15"
-            >
+              className="m-r-15">
               {"Submit"}
             </Button>
             <Button
               style={{ color: "warning" }}
               className="m-r-15"
-              onClick={handleClose}
-            >
+              onClick={handleClose}>
               {"Close"}
             </Button>
           </Modal.Footer>
@@ -3224,15 +3202,13 @@ return (
           <Button
             style={{ color: "primary" }}
             className="m-r-15"
-            onClick={handlePickupSubmit}
-          >
+            onClick={handlePickupSubmit}>
             {"Submit"}
           </Button>
           <Button
             style={{ color: "warning" }}
             className="m-r-15"
-            onClick={handlePickupClose}
-          >
+            onClick={handlePickupClose}>
             {"Close"}
           </Button>
         </Modal.Footer>
@@ -3256,8 +3232,7 @@ return (
                   fontSize: 13,
                   color: "#000434",
                   fontFamily: "Hiragino Maru Gothic ProN W4",
-                }}
-              >
+                }}>
                 <div style={{ fontWeight: "bold", marginBottom: 6 }}>
                   #{shipmentOrder?.order_id || "—"}
                 </div>
@@ -3291,8 +3266,7 @@ return (
                   fontSize: 13,
                   color: "#000434",
                   fontFamily: "Hiragino Maru Gothic ProN W4",
-                }}
-              >
+                }}>
                 <div>{shipmentOrder?.product_name || "—"}</div>
                 <div style={{ fontWeight: "bold", margin: "6px 0" }}>
                   <FaDollarSign size={12} /> ₹{shipmentOrder?.total_amount} (
@@ -3322,8 +3296,7 @@ return (
                   fontSize: 13,
                   color: "#000434",
                   fontFamily: "Hiragino Maru Gothic ProN W4",
-                }}
-              >
+                }}>
                 <div>{shipmentOrder?.customer_name || "—"}</div>
                 <div>
                   <BsPhoneFill /> {shipmentOrder?.customer_phone || "—"}
@@ -3363,8 +3336,7 @@ return (
                     textAlign: "center",
                     boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
                     animation: "brandGlow 2.5s infinite ease-in-out",
-                  }}
-                >
+                  }}>
                   <div
                     style={{
                       background: "linear-gradient(135deg, #F5891E, #000434)",
@@ -3380,8 +3352,7 @@ return (
                       boxShadow: "0 0 6px rgba(0, 0, 0, 0.15)",
                       marginBottom: 8,
                       animation: "pulseGlow 1.8s infinite ease-in-out",
-                    }}
-                  >
+                    }}>
                     🤖 OU AI Recommended
                   </div>
                   <div style={{ fontSize: 13, marginBottom: 6 }}>
@@ -3398,8 +3369,7 @@ return (
                       boxShadow: "0 0 8px #F5891E",
                       userSelect: "none",
                       width: "fit-content",
-                    }}
-                  >
+                    }}>
                     🔄 RTO Risk:{" "}
                     <span style={{ color: "#F5891E", fontWeight: 600 }}>
                       ~10%
@@ -3424,8 +3394,7 @@ return (
                   return (
                     <div
                       key={warehouse.warehouse_id}
-                      className="col-md-4 col-sm-6 mb-4"
-                    >
+                      className="col-md-4 col-sm-6 mb-4">
                       <div
                         style={{
                           padding: "15px",
@@ -3454,8 +3423,7 @@ return (
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.transform = "translateY(0)";
-                        }}
-                      >
+                        }}>
                         {isSelected && (
                           <span
                             style={{
@@ -3468,8 +3436,7 @@ return (
                               borderRadius: "5px",
                               fontSize: "12px",
                               boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
-                            }}
-                          >
+                            }}>
                             🏠 Nearest
                           </span>
                         )}
@@ -3519,8 +3486,7 @@ return (
           <Button
             style={{ color: "warning" }}
             className="m-r-15"
-            onClick={handleShipmentClose}
-          >
+            onClick={handleShipmentClose}>
             {"Close"}
           </Button>
         </Modal.Footer>
@@ -3553,8 +3519,7 @@ return (
                     ...newOrder,
                     product_sku_id: e.target.value,
                   } as Order);
-                }}
-              >
+                }}>
                 <option value="" disabled>
                   Select a Product
                 </option>
@@ -3579,8 +3544,7 @@ return (
                     ...newOrder,
                     channel_id: e.target.value,
                   } as Order);
-                }}
-              >
+                }}>
                 <option value="" disabled>
                   Select a Channel Account
                 </option>
@@ -3759,8 +3723,7 @@ return (
                     ...newOrder,
                     payment_method: e.target.value,
                   } as Order);
-                }}
-              >
+                }}>
                 <option value="">Select a Payment Method</option>
                 <option key={"cod"} value={"COD"}>
                   COD - Cash on Delivery
@@ -3792,15 +3755,13 @@ return (
             <Button
               style={{ color: "primary" }}
               className="m-r-15"
-              type="submit"
-            >
+              type="submit">
               {"Submit"}
             </Button>
             <Button
               style={{ color: "warning" }}
               className="m-r-15"
-              onClick={handleNewOrderClose}
-            >
+              onClick={handleNewOrderClose}>
               {"Close"}
             </Button>
           </Modal.Footer>
@@ -3829,8 +3790,7 @@ const DecorativeSvg = ({ score = 0, width = 120 }) => {
       width={width}
       viewBox="0 0 1360 680"
       xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="xMidYMid meet"
-    >
+      preserveAspectRatio="xMidYMid meet">
       <g transform="translate(128.5 42)">
         {/* Left shape (Red Threshold) */}
         <g transform="translate(177.84 324)">
@@ -3881,8 +3841,7 @@ const DecorativeSvg = ({ score = 0, width = 120 }) => {
             transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
             transformOrigin: "542px 450px",
           }}
-          transform={`rotate(${rotation}, 0, 0)`}
-        >
+          transform={`rotate(${rotation}, 0, 0)`}>
           <g transform="translate(542, 450)">
             <path fill="#585858" d="M-12 0 Q-12 -20 0 -360 Q12 -20 12 0 Z" />
             <circle cx="0" cy="0" r="22" fill="#585858" />

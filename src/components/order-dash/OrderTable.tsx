@@ -34,6 +34,8 @@ export interface OrderTableProps {
   onPrintLabel: (labelData: any) => void;
   onAutoBook: (orders: any[]) => void;
   onCancelOrder: (orderId: string) => void;
+  setStatusList: (statusList: any[]) => void;
+  setStatus: (status: boolean) => void;
 }
 
 // --- Modern Skeleton Loader (Deepened Neutrals) ---
@@ -79,6 +81,8 @@ const OrdersTable: React.FC<OrderTableProps> = ({
   onPrintLabel,
   onAutoBook,
   onCancelOrder,
+  setStatusList,
+  setStatus
 }) => {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [shipLoading, setShipLoading] = useState<string | null>(null);
@@ -127,7 +131,10 @@ const OrdersTable: React.FC<OrderTableProps> = ({
 
   const isAllSelected =
     selectedOrders.length === orders.length && orders.length > 0;
-
+    const handleViewStatus = (statusList: any[]) => {
+      setStatusList(statusList);
+      setStatus(true);
+    }
   return (
     <div
       ref={tableRef}
@@ -194,7 +201,8 @@ const OrdersTable: React.FC<OrderTableProps> = ({
                 const itemsList = order.items || [];
                 const hasMultipleItems = itemsList.length > 1;
                 const isItemsExpanded = expandedItems.has(order._id);
-
+                const latestStatus =
+                  order.status[order.status.length - 1].status;
                 return (
                   <tr
                     key={order._id}
@@ -417,7 +425,9 @@ const OrdersTable: React.FC<OrderTableProps> = ({
                           )} hover:opacity-80 transition-opacity`}>
                           {statusName}
                         </button>
-
+                        <button className="text-neutral-800 italic text-[11px] mt-1 px-1 font-medium" onClick={() => handleViewStatus(order.status)}>
+                          {latestStatus}
+                        </button>
                         {order.awb_number ? (
                           <div className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 mt-1 text-xs shadow-sm">
                             <span className="text-slate-500 font-medium">
