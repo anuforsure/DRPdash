@@ -122,194 +122,296 @@ const GetStartedRecharge = () => {
 
   return (
     <div className="d-flex justify-content-center align-items-center py-5">
-      <Card
-        className="shadow-lg border-0 overflow-hidden"
-        style={{ maxWidth: "550px", width: "100%", borderRadius: "15px" }}
+      <Card.Body
+  style={{
+    padding: "18px",
+    background: "#fff",
+  }}
+>
+  {/* Wallet Balance */}
+  <div
+    style={{
+      background: "#f5f0ee",
+      borderRadius: 14,
+      padding: "14px 16px",
+      color: "#fff",
+      marginBottom: 16,
+    }}
+  >
+    <div
+      style={{
+        fontSize: 11,
+        opacity: 0.9,
+      }}
+    >
+      Wallet Balance
+    </div>
+
+    <div
+      style={{
+        fontSize: 28,
+        fontWeight: 700,
+        lineHeight: 1.1,
+        marginTop: 4,
+      }}
+    >
+      ₹{totalCredit.toFixed(0)}
+    </div>
+
+    <div
+      style={{
+        fontSize: 11,
+        opacity: 0.9,
+        marginTop: 4,
+      }}
+    >
+      Available Balance
+    </div>
+  </div>
+
+  {/* Amount */}
+  <div style={{ marginBottom: 16 }}>
+    <label
+      style={{
+        fontSize: 12,
+        fontWeight: 600,
+        color: "#374151",
+        marginBottom: 6,
+        display: "block",
+      }}
+    >
+      Recharge Amount
+    </label>
+
+    <Form.Control
+      type="number"
+      value={amount}
+      onChange={(e) => handleAmountChange(e.target.value)}
+      placeholder="Enter amount"
+      style={{
+        height: 30,
+        fontSize: 12,
+        borderRadius: 5,
+        border: "1px solid #e5e7eb",
+        boxShadow: "none",
+      }}
+    />
+  </div>
+
+  {/* Quick Amounts */}
+  <div
+    style={{
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 8,
+      marginBottom: 16,
+    }}
+  >
+    {[500, 1000, 2000, 5000].map((val) => (
+      <button
+        key={val}
+        type="button"
+        onClick={() => handleAmountChange(val.toString())}
+        style={{
+          border:
+            Number(amount) === val
+              ? "1px solid #F5891E"
+              : "1px solid #e5e7eb",
+          background:
+            Number(amount) === val
+              ? "#fff7ed"
+              : "#fff",
+          color:
+            Number(amount) === val
+              ? "#F5891E"
+              : "#4b5563",
+          borderRadius: 999,
+          padding: "6px 12px",
+          fontSize: 12,
+          fontWeight: 600,
+        }}
       >
-        {/* Modern Header */}
-        <div
-          className="bg-primary p-4 text-white text-center"
-          style={{
-            background: "linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%)",
-          }}
-        >
-          <h4 className="mb-0 fw-bold">Add Money to Wallet</h4>
-          <small className="opacity-75">Secure & Instant Recharge</small>
-        </div>
+        ₹{val}
+      </button>
+    ))}
+  </div>
 
-        <Card.Body className="p-4 bg-white">
-          {/* Row 1: Wallet Pool Selection */}
-          <Form.Group className="mb-4">
-            <Form.Label className="fw-bold small text-uppercase text-muted ls-1">
-              Select Wallet
-            </Form.Label>
-            <Form.Select
-              value={selectedPool}
-              onChange={(e) => setSelectedPool(e.target.value)}
-              disabled={loadingPools || isPaying}
-              className="py-2"
-              style={{ border: "2px solid #e9ecef" }}
-            >
-              {loadingPools ? (
-                <option>Loading pools...</option>
-              ) : (
-                pools.map((pool: any) => (
-                  <option key={pool._id} value={pool._id}>
-                    {pool.name} (Cur. Bal: ₹
-                    {pool?.wallet_balance?.toFixed(2) || 0})
-                  </option>
-                ))
-              )}
-            </Form.Select>
-          </Form.Group>
+  {/* Promo */}
+<div
+  style={{
+    marginBottom: 18,
+  }}
+>
+  <label
+    style={{
+      fontSize: 12,
+      fontWeight: 600,
+      color: "#374151",
+      marginBottom: 8,
+      display: "block",
+    }}
+  >
+    Promo Code
+  </label>
 
-          {/* Row 2: Recharge Amount (Dynamic) */}
-          <Form.Group className="mb-4">
-            <Form.Label className="fw-bold small text-uppercase text-muted ls-1">
-              Enter Amount
-            </Form.Label>
-            <InputGroup className="mb-2">
-              <InputGroup.Text className="bg-light border-end-0 fw-bold text-muted">
-                ₹
-              </InputGroup.Text>
-              <Form.Control
-                type="number"
-                placeholder="e.g. 5000"
-                value={amount}
-                onChange={(e) => handleAmountChange(e.target.value)}
-                className="py-2 border-start-0 fw-bold text-dark fs-5"
-                style={{ border: "2px solid #e9ecef" }}
-                disabled={isPaying}
-              />
-            </InputGroup>
-            {/* Quick Select Chips (Optional UI enhancement) */}
-            <div className="d-flex gap-2 mt-2">
-              {[1000, 2000, 5000].map((val) => (
-                <Badge
-                  key={val}
-                  bg="light"
-                  text="dark"
-                  className="border px-3 py-2 cursor-pointer user-select-none"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => handleAmountChange(val.toString())}
-                >
-                  ₹{val}
-                </Badge>
-              ))}
-            </div>
-          </Form.Group>
+  <div
+    style={{
+      display: "flex",
+      gap: 8,
+      alignItems: "center",
+    }}
+  >
+    <Form.Control
+      value={coupon}
+      onChange={(e) =>
+        setCoupon(e.target.value.toUpperCase())
+      }
+      placeholder="Enter promo code"
+      disabled={bonus > 0}
+      style={{
+        height: 40,
+        fontSize: 13,
+        borderRadius: 10,
+        border: "1px solid #e5e7eb",
+        boxShadow: "none",
+      }}
+    />
 
-          {/* Row 3: Coupon Section */}
-          <Form.Group className="mb-4">
-            <Form.Label className="fw-bold small text-uppercase text-muted ls-1">
-              Promo Code
-            </Form.Label>
+    <button
+      type="button"
+      onClick={handleApplyCoupon}
+      disabled={
+        !coupon ||
+        !amount ||
+        isValidating ||
+        isPaying ||
+        bonus > 0
+      }
+      style={{
+        height: 40,
+        minWidth: 90,
+        border: "none",
+        borderRadius: 10,
+        background: bonus > 0 ? "#22c55e" : "#F5891E",
+        color: "#fff",
+        fontWeight: 600,
+        fontSize: 13,
+        padding: "0 16px",
+      }}
+    >
+      {bonus > 0 ? "✓ Applied" : "Apply"}
+    </button>
+  </div>
 
-            <InputGroup>
-              <Form.Control
-                placeholder="Enter Coupon Code"
-                value={coupon}
-                onChange={(e) => setCoupon(e.target.value.toUpperCase())}
-                disabled={isValidating || isPaying || bonus > 0}
-                className="text-uppercase"
-                style={{ border: "2px solid #e9ecef" }}
-              />
+  {bonus > 0 && (
+    <div
+      style={{
+        marginTop: 8,
+        fontSize: 12,
+        color: "#22c55e",
+        fontWeight: 600,
+      }}
+    >
+      🎉 Bonus ₹{bonus} added successfully
+    </div>
+  )}
+</div>
+  {/* Summary */}
+  <div
+    style={{
+      background: "#fafafa",
+      border: "1px solid #ececec",
+      borderRadius: 12,
+      padding: 14,
+      marginBottom: 16,
+    }}
+  >
+    <div
+      style={{
+        fontSize: 13,
+        fontWeight: 700,
+        marginBottom: 10,
+      }}
+    >
+      Recharge Summary
+    </div>
 
-              <Button
-                variant={bonus > 0 ? "success" : "outline-primary"}
-                onClick={handleApplyCoupon}
-                disabled={
-                  !coupon || !amount || isValidating || isPaying || bonus > 0
-                }
-              >
-                {isValidating ? (
-                  <Spinner size="sm" animation="border" />
-                ) : bonus > 0 ? (
-                  <i className="bi bi-check-lg"></i>
-                ) : (
-                  "Apply"
-                )}
-              </Button>
-            </InputGroup>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        fontSize: 12,
+        marginBottom: 6,
+      }}
+    >
+      <span>Amount</span>
+      <span>₹{numericAmount}</span>
+    </div>
 
-            {/* Promo Hint */}
-            {!bonus && (
-              <div className="mt-2 small text-muted">
-                <i className="bi bi-gift me-1 text-primary"></i>
-                Use code <strong>NEW500</strong> to get{" "}
-                <strong>50% extra bonus</strong> on your first recharge. Valid
-                only on recharges above <strong>₹500</strong>.
-              </div>
-            )}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        fontSize: 12,
+        marginBottom: 6,
+      }}
+    >
+      <span>Bonus</span>
+      <span style={{ color: "#16a34a" }}>
+        ₹{bonus}
+      </span>
+    </div>
 
-            {/* Success Message */}
-            {bonus > 0 && (
-              <div className="mt-2 small text-success fw-bold fade-in">
-                <i className="bi bi-stars me-1"></i>
-                Coupon applied! ₹{bonus} bonus added.
-              </div>
-            )}
-          </Form.Group>
+    <hr style={{ margin: "8px 0" }} />
 
-          <hr className="my-4 border-light" />
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        fontWeight: 700,
+        fontSize: 14,
+      }}
+    >
+      <span>Total Credit</span>
+      <span style={{ color: "#F5891E" }}>
+        ₹{totalCredit}
+      </span>
+    </div>
+  </div>
 
-          {/* Row 4: Summary Breakdown */}
-          <div className="bg-light p-3 rounded-3 mb-4">
-            <div className="d-flex justify-content-between mb-2">
-              <span className="text-muted">Recharge Amount</span>
-              <span className="fw-medium">₹{numericAmount.toFixed(2)}</span>
-            </div>
+  {/* Button */}
+  <Button
+    className="w-100"
+    onClick={handlePayment}
+    disabled={
+      loadingPools ||
+      isPaying ||
+      !selectedPool ||
+      !amount
+    }
+    style={{
+      height: 44,
+      border: "none",
+      borderRadius: 10,
+      background: "#F5891E",
+      fontWeight: 600,
+      fontSize: 14,
+    }}
+  >
+    {isPaying ? "Processing..." : "Add Money"}
+  </Button>
 
-            {bonus > 0 && (
-              <div className="d-flex justify-content-between mb-2 text-success">
-                <span>
-                  <i className="bi bi-gift-fill me-1"></i> Bonus Credit
-                </span>
-                <span className="fw-bold">+ ₹{bonus.toFixed(2)}</span>
-              </div>
-            )}
-
-            <div className="border-top my-2"></div>
-
-            <div className="d-flex justify-content-between align-items-center">
-              <span className="fw-bold text-dark">Total Wallet Credit</span>
-              <span className="fw-bold text-primary fs-4">
-                ₹{totalCredit.toFixed(2)}
-              </span>
-            </div>
-          </div>
-
-          {/* Pay Button */}
-          <Button
-            variant="success"
-            size="lg"
-            className="w-100 text-white fw-bold py-3 shadow-sm"
-            onClick={handlePayment}
-            disabled={loadingPools || isPaying || !selectedPool || !amount}
-            style={{
-              background: isPaying ? "#6c757d" : "#198754",
-              border: "none",
-              transition: "all 0.2s",
-            }}
-          >
-            {isPaying ? (
-              <>
-                <Spinner size="sm" animation="border" className="me-2" />
-                Processing Payment...
-              </>
-            ) : (
-              `Pay ₹${numericAmount} Now`
-            )}
-          </Button>
-
-          <div className="text-center mt-3">
-            <small className="text-muted" style={{ fontSize: "0.75rem" }}>
-              <i className="bi bi-lock-fill me-1"></i>
-              Payments are secured by Razorpay
-            </small>
-          </div>
-        </Card.Body>
-      </Card>
+  <div
+    style={{
+      textAlign: "center",
+      marginTop: 8,
+      fontSize: 10,
+      color: "#9ca3af",
+    }}
+  >
+    🔒 Secure payments powered by Razorpay
+  </div>
+</Card.Body>
     </div>
   );
 };

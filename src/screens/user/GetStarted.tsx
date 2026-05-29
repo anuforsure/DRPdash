@@ -16,8 +16,8 @@ import { Stat, useStatsStore } from "../../store/useStatsStore";
 import MakePool from "../../components/get-started/MakePool";
 import MakeWarehouse from "../../components/get-started/MakeWarehouse";
 import MakeChannelAccount from "../../components/get-started/MakeChannelAccount";
-import logoImg from "../../assets/logo.png";
-import logoImg1 from "../../assets/logo1.png";
+import logoImg from "../../assets/Orderzuplogo.png";
+// import logoImg1 from "../../assets/logo1.png";
 import { drpCrmBaseUrl } from "../../axios/urls";
 import { appAxios } from "../../axios/appAxios";
 import { getAccountSummary } from "../../APIs/user/dashboard";
@@ -94,17 +94,18 @@ const GetStarted: React.FC = () => {
   // Step definitions
   const stepOrder: Step[] = [
     {
-      key: "pools",
-      label: "Pool Setup",
-      helper: "Minimal business details",
-      content: <MakePool handleNext={() => handleNext("pools")} />,
-    },
-    {
       key: "warehouses",
       label: "Warehouse",
       helper: "Create location",
       content: <MakeWarehouse handleNext={() => handleNext("warehouses")} />,
     },
+    {
+      key: "pools",
+      label: "Business Account Setup",
+      helper: "Minimal business details",
+      content: <MakePool handleNext={() => handleNext("pools")} />,
+    },
+    
     {
       key: "channel",
       label: "Channel Account",
@@ -228,107 +229,133 @@ const GetStarted: React.FC = () => {
           </div>
 
           {/* Horizontal Stepper */}
-          <Row className="mb-4 g-3">
-            {stepOrder.map((step, index) => {
-              const isActive = activeStep === step.key;
-              const isComplete = completedSteps.includes(step.key);
+         {/* Horizontal Stepper */}
+<div
+  className="mb-4"
+  style={{
+    display: "flex",
+    gap: "12px",
+    flexWrap: "nowrap",
+    overflowX: "auto",
+  }}
+>
+  {stepOrder.map((step, index) => {
+    const isActive = activeStep === step.key;
+    const isComplete = completedSteps.includes(step.key);
 
-              return (
-                <Col key={step.key} xs={12} md={6} lg={3}>
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => handleClickStep(step.key)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 12,
-                      padding: "12px 16px",
-                      borderRadius: 10,
-                      cursor: "pointer",
-                      backgroundColor: "#fff",
-                      // Animate background color gently
-                      background: isActive ? "rgba(245,137,30,0.06)" : "#fff",
-                      // Move border from Left to Bottom for horizontal feel
-                      borderBottom: isActive
-                        ? "4px solid #F5891E"
-                        : "4px solid transparent",
-                      border: isActive ? undefined : "1px solid transparent", // invisible border to prevent layout shift
-                      boxShadow: "0 2px 5px rgba(0,0,0,0.03)",
-                      height: "100%",
-                      transition: "all 0.2s ease",
-                    }}
-                  >
-                    {/* Circle Icon - Same Size (36px) */}
-                    <div style={{ flexShrink: 0 }}>
-                      {isComplete ? (
-                        <div
-                          style={{
-                            width: 36,
-                            height: 36,
-                            borderRadius: 18,
-                            background: "#F5891E",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: "#fff",
-                          }}
-                        >
-                          <FaCheck size={14} />
-                        </div>
-                      ) : (
-                        <div
-                          style={{
-                            width: 36,
-                            height: 36,
-                            borderRadius: 18,
-                            border: "1px solid #e6e9ee",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: isActive ? "#F5891E" : "#9aa0ad",
-                            background: isActive
-                              ? "rgba(245,137,30,0.06)"
-                              : "transparent",
-                            fontWeight: 600,
-                          }}
-                        >
-                          {index + 1}
-                        </div>
-                      )}
-                    </div>
+    return (
+      <div
+        key={step.key}
+        style={{
+          flex: 1,
+          minWidth: "250px",
+        }}
+      >
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => handleClickStep(step.key)}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "12px 16px",
+            borderRadius: 10,
+            cursor: "pointer",
+            backgroundColor: "#fff",
+            background: isActive ? "rgba(245,137,30,0.06)" : "#fff",
+            borderBottom: isActive
+              ? "4px solid #F5891E"
+              : "4px solid transparent",
+            border: isActive
+              ? undefined
+              : "1px solid transparent",
+            boxShadow: "0 2px 5px rgba(0,0,0,0.03)",
+            height: "100%",
+            transition: "all 0.2s ease",
+          }}
+        >
+          <div style={{ flexShrink: 0 }}>
+            {isComplete ? (
+             <div
+  style={{
+    width: 36,
+    height: 36,
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: 700,
+    transition: "all 0.2s ease",
+    background: isComplete
+      ? "#F5891E"
+      : isActive
+      ? "rgba(245,137,30,0.08)"
+      : "#fff",
+    border: isComplete
+      ? "none"
+      : `1px solid ${isActive ? "#F5891E" : "#e6e9ee"}`,
+    color: isComplete
+      ? "#fff"
+      : isActive
+      ? "#F5891E"
+      : "#9aa0ad",
+  }}
+>
+  {isComplete ? <FaCheck size={14} /> : index + 1}
+</div>
+            ) : (
+              <div
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 18,
+                  border: "1px solid #e6e9ee",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: isActive ? "#F5891E" : "#9aa0ad",
+                  background: isActive
+                    ? "rgba(245,137,30,0.06)"
+                    : "transparent",
+                  fontWeight: 600,
+                }}
+              >
+                {index + 1}
+              </div>
+            )}
+          </div>
 
-                    {/* Text Content */}
-                    <div style={{ flex: 1, overflow: "hidden" }}>
-                      <div
-                        className="text-truncate"
-                        style={{
-                          fontWeight: isActive ? 700 : 600,
-                          color: isActive ? "#000434" : "#111827",
-                          fontSize: "1rem",
-                        }}
-                      >
-                        {step.label}
-                      </div>
-                      {step.helper && (
-                        <div
-                          className="text-truncate"
-                          style={{
-                            fontSize: 12,
-                            color: "#6b7280",
-                            marginTop: 2,
-                          }}
-                        >
-                          {step.helper}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </Col>
-              );
-            })}
-          </Row>
+          <div style={{ flex: 1, overflow: "hidden" }}>
+            <div
+              className="text-truncate"
+              style={{
+                fontWeight: isActive ? 700 : 600,
+                color: isActive ? "#000434" : "#111827",
+                fontSize: "1rem",
+              }}
+            >
+              {step.label}
+            </div>
 
+            {step.helper && (
+              <div
+                className="text-truncate"
+                style={{
+                  fontSize: 12,
+                  color: "#6b7280",
+                  marginTop: 2,
+                }}
+              >
+                {step.helper}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  })}
+</div>
           {/* Content Card */}
           <Row>
             <Col xs={12}>
@@ -391,9 +418,9 @@ const GetStarted: React.FC = () => {
 };
 
 export default GetStarted;
-
 const OnboardingHeader = ({ username = "" }) => {
   const navigate = useNavigate();
+
   const handleLogout = async () => {
     try {
       await axios.post(
@@ -407,63 +434,104 @@ const OnboardingHeader = ({ username = "" }) => {
     }
   };
 
-  // Reusing exact logic/colors from your original code
   return (
-    <Navbar
-      expand="lg"
+    <header
+  style={{
+    background: "#ffffff",
+    borderBottom: "1px solid rgba(255,255,255,0.08)",
+  }}
+>
+  <div
+    style={{
+      maxWidth: "1200px",
+      margin: "0 auto",
+      padding: "18px 24px",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    }}
+  >
+    <div>
+  <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: 0,
+    lineHeight: 1,
+  }}
+>
+  <img
+    src={logoImg}
+    alt="logo"
+    style={{
+      width: "44px",
+      height: "44px",
+      objectFit: "contain",
+      marginRight: "-2px",
+    }}
+  />
+
+  <span
+    className="font-bold text-[#000967]"
+    style={{
+      fontSize: "34px",
+      lineHeight: "44px",
+      letterSpacing: "-1px",
+    }}
+  >
+    Orderz
+    <span
+      className="text-[#F5891E]"
       style={{
-        backgroundColor: "#000434", // Explicit blue color from brand
-        borderBottom: "1px solid #1a1e4b",
-        padding: "0.75rem 0",
+        marginLeft: "-1px",
       }}
-      variant="dark" // Ensures text/hamburger is light
     >
-      <Container fluid style={{ maxWidth: 1200 }}>
-        <div className="d-flex gap-2 align-items-center my-2">
-          <span className="nav-logo-icon">
-            <img src={logoImg} style={{ width: "30px " }} alt="logo" />
-          </span>
-          <span>
-            <img src={logoImg1} style={{ width: "100px " }} alt="logo text" />
-          </span>
-        </div>
+      Up
+    </span>
+  </span>
+</div>
 
-        <Nav className="ms-auto">
-          <Dropdown align="end">
-            <Dropdown.Toggle
-              variant="outline-light" // Changed to fit dark header
-              id="user-dropdown"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                borderRadius: 24,
-                padding: "6px 12px",
-                border: "1px solid rgba(255,255,255,0.2)",
-                background: "rgba(255,255,255,0.1)",
-                color: "#fff",
-              }}
-            >
-              <FaUserCircle size={18} />
-              <span style={{ fontSize: 14, fontWeight: 500 }}>{username}</span>
-            </Dropdown.Toggle>
+      <div
+        style={{
+          marginTop: "4px",
+          marginLeft: "62px",
+          fontSize: "13px",
+          letterSpacing: "1px",
+          color: "#94A3B8",
+          textTransform: "uppercase",
+        }}
+      >
+        Hello,
+        <span
+          style={{
+            color: "#F5891E",
+            fontWeight: 700,
+            marginLeft: "6px",
+          }}
+        >
+          {username}
+        </span>
+      </div>
+    </div>
 
-            <Dropdown.Menu>
-              <Dropdown.Item
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                }}
-                onClick={handleLogout}
-              >
-                <FaSignOutAlt />
-                Logout
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </Nav>
-      </Container>
-    </Navbar>
+    <button
+      onClick={handleLogout}
+      style={{
+        border: "none",
+        background: "#F5891E",
+        color: "#fff",
+        padding: "10px 22px",
+        borderRadius: "10px",
+        fontWeight: 600,
+        cursor: "pointer",
+        boxShadow: "0 4px 12px rgba(245,137,30,0.25)",
+      }}
+    >
+      Logout
+    </button>
+  </div>
+</header>
   );
 };
+
+
