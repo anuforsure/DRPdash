@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import SupportChatWidget from "./SupportChatWidget";
+
 import axios from "axios";
 import { drpCrmBaseUrl } from "../../../axios/urls";
 import { useUserStore } from "../../../store/useUserStore";
@@ -266,7 +267,7 @@ const UserPanel: React.FC = () => {
         {/* Mobile Header */}
         <header className="md:hidden bg-white p-4 flex items-center justify-between z-30 shadow-sm border-b border-neutral-200">
           <div className="flex items-center justify-center gap-2">
-            <img src="/Orderzup.png" alt="Logo Icon" className="w-10" />
+            <img src="Orderzuplogo.png" alt="Logo Icon" className="w-10" />
             <span className="font-bold text-[#000967] text-4xl">
               Orderz<span className="text-[#F5891E]">Up</span>
             </span>
